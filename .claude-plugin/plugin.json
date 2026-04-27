@@ -1,0 +1,11 @@
+{
+  "name": "instagram",
+  "description": "Instagram channel for Claude Code — read and reply to comments via the official Instagram Graph API. Built-in access control; manage allowlists and policy via /instagram:access.",
+  "version": "0.1.0",
+  "keywords": [
+    "instagram",
+    "messaging",
+    "channel",
+    "mcp"
+  ]
+}
