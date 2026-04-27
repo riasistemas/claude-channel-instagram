@@ -26,7 +26,19 @@ Without the env var, the plugin runs as a pure generic Instagram channel.
 ```typescript
 import type { InstagramExtensions } from "claude-channel-instagram/lib/extensions"
 
+let notify: (params: { content: string; meta: Record<string, string> }) => void
+
 const extensions: InstagramExtensions = {
+  // Optional. Called once at boot. Use it to capture `notify` and `log`
+  // for use in background loops or asynchronous hooks.
+  async init(ctx) {
+    notify = ctx.notify
+    // Example: start a 5-minute action-nudge loop
+    setInterval(() => {
+      notify({ content: "...", meta: { chat_id: "system;-;actions" } })
+    }, 5 * 60 * 1000).unref()
+  },
+
   async onInboundComment(ctx) {
     // ctx: { comment_id, text, username, ig_user_id, media_id,
     //        media_permalink, parent_comment_id, timestamp, is_first_contact }

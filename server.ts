@@ -576,7 +576,15 @@ log(`webhook port: ${WEBHOOK_PORT}`)
 
 loadAccess()
 
-extensions = await loadExtensions(log)
+extensions = await loadExtensions({
+  log,
+  notify: params => {
+    void mcp.notification({
+      method: 'notifications/claude/channel',
+      params,
+    })
+  },
+})
 
 setInterval(checkApprovals, 5000).unref()
 

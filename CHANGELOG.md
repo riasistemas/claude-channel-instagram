@@ -4,6 +4,23 @@ All notable changes to this plugin are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.1] — 2026-04-27
+
+### Added
+
+- **`init(ctx)` hook** in the extensions interface. The plugin now passes
+  an `ExtensionContext = { notify, log }` to extensions when they boot, so
+  background loops or asynchronous hooks can capture references to send
+  MCP notifications (`notify`) and log lines (`log`) outside the regular
+  hook flow. Backward-compatible: `init` is optional — existing extensions
+  without it continue to work.
+
+### Changed
+
+- `loadExtensions(log)` is now `loadExtensions(ctx: ExtensionContext)`.
+  This is a breaking change to the function signature (used only by the
+  plugin server itself, not by extension authors).
+
 ## [0.1.0] — 2026-04-26
 
 ### Added

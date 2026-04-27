@@ -64,7 +64,23 @@ export interface PermissionDecision {
   pattern_remembered?: string
 }
 
+/** Args passed to `init()` so the extension can hold onto helpers. */
+export interface ExtensionContext {
+  /** Send an MCP `notifications/claude/channel` message to the assistant. */
+  notify(params: { content: string; meta: Record<string, string> }): void
+  /** Log to stderr + the plugin log file. */
+  log(msg: string): void
+}
+
 export interface InstagramExtensions {
+  /**
+   * Called once when the plugin boots, before any other hook. Use this to
+   * capture references like `notify` and `log` that some hooks (or
+   * background loops) will need later. Optional — extensions that only
+   * implement reactive hooks can skip it.
+   */
+  init?(ctx: ExtensionContext): Promise<void>
+
   /**
    * Called when an inbound comment passes the access gate, before the MCP
    * notification is emitted. Return a partial meta object to inject extra
@@ -98,6 +114,7 @@ export interface InstagramExtensions {
 }
 
 const NO_OP: Required<InstagramExtensions> = {
+  init: async () => undefined,
   onInboundComment: async () => undefined,
   onFirstContact: async () => undefined,
   onReplySent: async () => undefined,
@@ -108,12 +125,19 @@ let cached: InstagramExtensions | null = null
 
 /**
  * Load the private extensions module if INSTAGRAM_EXTENSIONS_DIR is set.
- * Looks for `<dir>/index.ts`, `<dir>/index.js`, or a `package.json` with
- * `main`. Returns a no-op object if the env var is missing or load fails.
+ * Looks for `<dir>/index.ts`, `<dir>/index.js`, or `<dir>/index.mjs`.
+ * Returns a no-op object if the env var is missing or load fails.
+ *
+ * After load, calls `init(ctx)` on the extension if it exposes one — this
+ * is how extensions capture references to `notify` and `log` for use in
+ * background loops or asynchronous hooks.
  */
-export async function loadExtensions(log: (msg: string) => void): Promise<InstagramExtensions> {
+export async function loadExtensions(
+  ctx: ExtensionContext,
+): Promise<InstagramExtensions> {
   if (cached) return cached
 
+  const log = ctx.log
   const dir = process.env.INSTAGRAM_EXTENSIONS_DIR
   if (!dir) {
     cached = NO_OP
@@ -147,6 +171,13 @@ export async function loadExtensions(log: (msg: string) => void): Promise<Instag
       return cached
     }
     log(`extensions loaded from ${entry}`)
+    if (ext.init) {
+      try {
+        await ext.init(ctx)
+      } catch (err) {
+        log(`extensions init() threw: ${err} — keeping load (hooks may misbehave)`)
+      }
+    }
     cached = ext
     return cached
   } catch (err) {
