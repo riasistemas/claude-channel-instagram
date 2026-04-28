@@ -4,6 +4,68 @@ All notable changes to this plugin are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.0] — 2026-04-27
+
+### Added
+
+- **Direct Messages support**. The plugin now parses the Messenger-style
+  `messaging` envelope from Instagram webhooks, persists DMs alongside
+  comments in the local SQLite history, and surfaces them as MCP channel
+  notifications with `meta.kind === "dm"`. Inbound media (image / audio /
+  video) is downloaded into `~/.claude/channels/instagram/media/<handle>/`,
+  audio is transcribed via Groq Whisper when `GROQ_API_KEY` is set.
+- **Comment-to-DM bootstrap** via Instagram's Private Replies API. New
+  tool `send_private_reply(comment_id, text)` opens a private DM thread
+  with the author of a public comment (7-day window, one-time per
+  comment). Combined with `meta.auto_dm: true` on inbound comment
+  notifications, this lets Claude reply briefly in public AND open a DM
+  in the same turn — the same UX patterns popularized by Manychat, but
+  implemented entirely against the official Graph API with our own
+  token (zero third-party dependency).
+- **Outbound DMs** via new tool `send_dm(chat_id, text?, image_path?,
+  audio_path?)`. Supports text plus a single image or audio attachment.
+  Outbound media is served through an internal `/media/<token>` endpoint
+  on the existing Bun.serve listener (single-use tokens, 10-minute TTL),
+  reachable through the same tunnel that delivers webhooks. Set
+  `INSTAGRAM_PUBLIC_BASE` to the public tunnel URL so Meta can fetch
+  attachments.
+- **24h DM window enforcement**. `send_dm` returns a clear error when
+  the user hasn't messaged within the last 24 hours. `HUMAN_AGENT` tag
+  (7-day extension) is documented but intentionally not implemented in
+  v0.1 — it lands in v0.2 behind an opt-in flag.
+- **Extensions interface** widened with `onInboundDm` and `onDmSent`
+  hooks. `FirstContactContext` gained a `source: 'comment' | 'dm'`
+  field so extensions can differentiate first contact channels.
+  `InboundDmContext` carries `sender_id`, `text`, attachment paths and
+  optional `transcript`.
+- New `/instagram:qualification` skill describing the comment-to-DM →
+  qualification flow.
+
+### Changed
+
+- SQLite `messages` table extended with `kind`, `recipient_id`,
+  `media_path`, `transcript`, `dm_message_id` columns. Existing rows
+  default to `kind = 'comment'`. Migration is idempotent and runs at
+  boot. `INSERT` paths are split (`stmtInsertMsg` for comments,
+  `stmtInsertDm` for DMs).
+- `parseInstagramPayload` now returns a discriminated union of
+  `IgComment | IgDm` instead of `IgComment[]`. Internal API only.
+- MCP server `instructions` rewritten to teach Claude the comment-to-DM
+  flow and the `meta.kind` / `meta.auto_dm` contract.
+- `Access` config gained `autoPrivateReplyOnComment?: boolean` (default
+  `true`) — controls whether the plugin sets `meta.auto_dm` on inbound
+  comments.
+
+### Notes
+
+- DM support requires `instagram_manage_messages` (already part of the
+  default Instagram Login API scopes).
+- For outbound media, set `INSTAGRAM_PUBLIC_BASE=https://<your-tunnel>`
+  so Meta's servers can fetch the temporary `/media/<token>` URL.
+- Without `GROQ_API_KEY`, audio inbound is delivered as a file path
+  with no transcript — Claude can still respond, just without
+  understanding the contents.
+
 ## [0.1.1] — 2026-04-27
 
 ### Added
@@ -45,5 +107,4 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Scope
 
-- **Comments only**. DMs (Messenger Platform) are planned for v0.2 and
-  require a separate App Review for `instagram_manage_messages`.
+- **Comments only**. DMs (Messenger Platform) shipped in v0.2.0.

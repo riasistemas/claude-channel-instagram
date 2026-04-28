@@ -41,8 +41,44 @@ export interface ReplyContext {
 export interface FirstContactContext {
   username: string
   ig_user_id?: string
+  /** comment_id when source==='comment', message_id when source==='dm'. */
   comment_id: string
   text: string
+  /** Whether the first contact arrived as a public comment or a DM. */
+  source: 'comment' | 'dm'
+}
+
+export interface InboundDmContext {
+  message_id: string
+  /** IG-scoped user id (`messaging.sender.id` in the webhook). Pass to send_dm. */
+  sender_id: string
+  /** Our own ig account id (the message recipient). */
+  recipient_id: string
+  username: string
+  text?: string
+  image_path?: string
+  audio_path?: string
+  video_path?: string
+  /** Audio transcript when GROQ_API_KEY is set and audio is present. */
+  transcript?: string
+  timestamp: number
+  /** True the first time this username DMs us in our local history. */
+  is_first_contact: boolean
+}
+
+export interface DmSentContext {
+  /** The DM the plugin just sent successfully. */
+  message_id: string
+  recipient_id: string
+  username?: string
+  text?: string
+  /** When media was attached, the local path that was uploaded. */
+  attachment_path?: string
+  attachment_kind?: 'image' | 'audio' | 'video'
+  /** True when the send used the comment-to-DM path (Private Replies API). */
+  via_private_reply: boolean
+  /** Set to a tag when send used MESSAGE_TAG (e.g. HUMAN_AGENT for >24h). */
+  tag?: 'HUMAN_AGENT' | 'ACCOUNT_UPDATE'
 }
 
 export interface MetaPatch {
@@ -89,7 +125,8 @@ export interface InstagramExtensions {
   onInboundComment?(ctx: InboundContext): Promise<MetaPatch | void>
 
   /**
-   * Called once the FIRST time a previously unknown username comments.
+   * Called once the FIRST time a previously unknown username appears,
+   * either via comment or DM (use `ctx.source` to disambiguate).
    * Useful for prospect auto-registration into a CRM.
    */
   onFirstContact?(ctx: FirstContactContext): Promise<void>
@@ -100,6 +137,19 @@ export interface InstagramExtensions {
    * audit trails, or CRM event registration.
    */
   onReplySent?(ctx: ReplyContext): Promise<void>
+
+  /**
+   * Called when an inbound DM passes the access gate, before the MCP
+   * notification is emitted. Mirrors `onInboundComment` for direct
+   * messages — return a partial meta object to enrich the notification.
+   */
+  onInboundDm?(ctx: InboundDmContext): Promise<MetaPatch | void>
+
+  /**
+   * Called after the plugin successfully sent a DM (text, media, or
+   * private reply). Useful for CRM event registration, audit trails.
+   */
+  onDmSent?(ctx: DmSentContext): Promise<void>
 
   /**
    * Optional side-channel for permission prompts. Implementations can
@@ -118,6 +168,8 @@ const NO_OP: Required<InstagramExtensions> = {
   onInboundComment: async () => undefined,
   onFirstContact: async () => undefined,
   onReplySent: async () => undefined,
+  onInboundDm: async () => undefined,
+  onDmSent: async () => undefined,
   permissionRelay: async () => ({ behavior: 'deny' }),
 }
 

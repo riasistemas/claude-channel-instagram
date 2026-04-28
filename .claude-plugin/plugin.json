@@ -1,11 +1,12 @@
 {
   "name": "instagram",
-  "description": "Instagram channel for Claude Code — read and reply to comments via the official Instagram Graph API. Built-in access control; manage allowlists and policy via /instagram:access.",
-  "version": "0.1.1",
+  "description": "Instagram channel for Claude Code — read and reply to comments AND direct messages via the official Instagram Graph API. Built-in comment-to-DM bootstrap, audio transcription, and access control via /instagram:access.",
+  "version": "0.2.0",
   "keywords": [
     "instagram",
     "messaging",
     "channel",
+    "dm",
     "mcp"
   ]
 }

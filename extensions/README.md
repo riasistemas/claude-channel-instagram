@@ -15,8 +15,10 @@ loads it at boot and calls the hooks at the appropriate points:
 | Hook | When it runs | What it can do |
 | --- | --- | --- |
 | `onInboundComment(ctx)` | After the access gate passes, before the MCP notification reaches Claude | Return a partial meta object to inject extra fields (e.g. `crm_name`, `crm_stage`) into the notification |
-| `onFirstContact(ctx)` | The first time a previously unknown username comments | Auto-register a prospect, send a webhook elsewhere, emit a metric |
-| `onReplySent(ctx)` | After the plugin successfully sent a reply via the Graph API | Echo the message to another system, write to an audit log, register a CRM event |
+| `onInboundDm(ctx)` | After the access gate passes for a direct message, before the MCP notification reaches Claude | Same as above but for DM context (sender_id, attachments, transcript). Return a partial meta. |
+| `onFirstContact(ctx)` | The first time a previously unknown username appears (comment OR DM — see `ctx.source`) | Auto-register a prospect, send a webhook elsewhere, emit a metric |
+| `onReplySent(ctx)` | After the plugin successfully sent a public comment reply via the Graph API | Echo the message to another system, write to an audit log, register a CRM event |
+| `onDmSent(ctx)` | After the plugin successfully sent a DM (text, media, or private reply) | Same idea as `onReplySent` but for the DM thread |
 | `permissionRelay(prompt)` | When a permission prompt needs user approval and you want a different surface than Instagram | Forward to WhatsApp / Telegram / Slack / wherever, resolve to `allow` or `deny` |
 
 Without the env var, the plugin runs as a pure generic Instagram channel.
@@ -52,13 +54,30 @@ const extensions: InstagramExtensions = {
   },
 
   async onFirstContact(ctx) {
-    // ctx: { username, ig_user_id, comment_id, text }
+    // ctx: { username, ig_user_id, comment_id, text, source }
+    // `source` is "comment" | "dm" — useful when first contact arrives
+    // as a DM rather than a public comment.
     // Side-effect only. No return value used.
   },
 
   async onReplySent(ctx) {
     // ctx: { comment_id, reply_id, message,
     //        in_reply_to_username, in_reply_to_text, media_id }
+  },
+
+  async onInboundDm(ctx) {
+    // ctx: { message_id, sender_id, recipient_id, username,
+    //        text?, image_path?, audio_path?, video_path?,
+    //        transcript?, timestamp, is_first_contact }
+    //
+    // Same return contract as onInboundComment.
+    return { crm_name: "Acme Inc." }
+  },
+
+  async onDmSent(ctx) {
+    // ctx: { message_id, recipient_id, username, text?,
+    //        attachment_path?, attachment_kind?, via_private_reply, tag? }
+    // Side-effect only.
   },
 
   async permissionRelay(prompt) {
