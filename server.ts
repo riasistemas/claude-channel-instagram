@@ -405,7 +405,17 @@ interface IgDm {
   timestamp: number // unix seconds
 }
 
-type IgEvent = IgComment | IgDm
+interface IgMention {
+  kind: 'mention'
+  /** Media id of the post where we were mentioned. Always present. */
+  media_id: string
+  /** Comment id when the mention was inside a comment thread. Absent when
+   *  the mention was in the post caption itself. */
+  comment_id?: string
+  timestamp: number // unix seconds
+}
+
+type IgEvent = IgComment | IgDm | IgMention
 
 function parseInstagramPayload(payload: any): IgEvent[] {
   const out: IgEvent[] = []
@@ -413,8 +423,25 @@ function parseInstagramPayload(payload: any): IgEvent[] {
   if (!Array.isArray(entries)) return out
 
   for (const entry of entries) {
-    // Comments arrive under `changes` with field=comments
+    // Comments arrive under `changes` with field=comments.
+    // Mentions arrive under `changes` with field=mentions (post caption tags
+    // and tags inside comments). Both are forwarded to Claude — mentions
+    // come with only media_id (and optionally comment_id), Claude is
+    // expected to call list_comments / Graph API to fetch the actual text.
     for (const change of entry.changes ?? []) {
+      if (change.field === 'mentions') {
+        const v = change.value ?? {}
+        const mediaId: string | undefined = v.media_id
+        const commentId: string | undefined = v.comment_id
+        if (!mediaId) continue
+        out.push({
+          kind: 'mention',
+          media_id: mediaId,
+          comment_id: commentId,
+          timestamp: Math.floor(Date.now() / 1000),
+        })
+        continue
+      }
       if (change.field !== 'comments') continue
       const v = change.value ?? {}
       const commentId: string | undefined = v.id
@@ -504,7 +531,7 @@ const mcp = new Server(
     instructions: [
       'The user reads Instagram in their app, not this session. Everything you want them to see must go through reply_comment, send_private_reply, or send_dm — your transcript output never reaches Instagram.',
       '',
-      'Inbound events arrive as <channel source="plugin:instagram:instagram" chat_id="any;-;@username" ...>. The meta.kind field tells you whether it was a public comment ("comment") or a direct message ("dm").',
+      'Inbound events arrive as <channel source="plugin:instagram:instagram" chat_id="any;-;@username" ...>. The meta.kind field tells you which kind: "comment" (public comment on YOUR post), "dm" (direct message), or "mention" (someone tagged @your_account on a third-party post or in their caption — meta.media_id is the media, meta.comment_id is set when the mention was inside a comment thread). For mentions, use list_comments(media_id) to fetch the surrounding text before deciding to reply.',
       '',
       'When meta.kind === "comment" AND meta.auto_dm === "true": reply BRIEFLY in public via reply_comment AND open a private DM thread via send_private_reply (one short opener that invites the prospect to talk in DM). Both calls in the same response.',
       '',
@@ -636,11 +663,13 @@ mcp.setRequestHandler(ListToolsRequestSchema, async () => ({
 let extensions: InstagramExtensions = {}
 
 // Permission relay: Claude Code emits a `permission_request` notification when
-// it wants to call a dangerous tool. The Instagram channel itself can't ask
-// the user inline (comments aren't a conversational surface), so we forward
-// the prompt to extensions.permissionRelay if present. Without an extension,
-// the server falls back to deny — extensions are the only sanctioned way to
-// approve tool calls from this channel.
+// it wants to call a dangerous tool. By default Claude Code already prompts
+// the user in the terminal where it's running. This handler is purely a
+// side-channel: if extensions.permissionRelay is configured, we ALSO notify a
+// remote owner (e.g. WhatsApp interactive buttons) and emit a decision when
+// they answer, which races against the terminal prompt — first answer wins.
+// Without an extension, this handler is a no-op and the terminal prompt is
+// the sole path.
 mcp.setNotificationHandler(
   z.object({
     method: z.literal('notifications/claude/channel/permission_request'),
@@ -655,24 +684,39 @@ mcp.setNotificationHandler(
     const { request_id, tool_name, description, input_preview } = params
     const pattern = `${tool_name}:${description.split(/\s+/)[0] ?? ''}`
 
-    const decision = extensions.permissionRelay
-      ? await runHook(log, 'permissionRelay', () =>
-          extensions.permissionRelay!({
-            request_id,
-            tool_name,
-            description,
-            input_preview,
-            pattern,
-          }),
-        )
-      : undefined
-
-    const behavior = decision?.behavior ?? 'deny'
-    void mcp.notification({
-      method: 'notifications/claude/channel/permission',
-      params: { request_id, behavior },
-    })
-    log(`permission ${request_id} (${tool_name}): ${behavior}`)
+    // Side-channel relay (e.g. WhatsApp button) runs async in parallel with
+    // Claude Code's local terminal prompt. Whichever resolves first wins:
+    //   - Terminal: user presses a key, Claude Code finalizes the request
+    //     locally (no MCP notification needed from us).
+    //   - Relay: remote owner taps a button → permissionRelay resolves with
+    //     a decision → we emit the notification, which overrides the terminal
+    //     prompt and unblocks Claude.
+    //   - Neither: prompt stays open in the terminal indefinitely (intended).
+    //
+    // Critically, this handler MUST NOT emit a default 'deny' — that would
+    // race-kill the terminal prompt before the user can answer.
+    if (extensions.permissionRelay) {
+      void runHook(log, 'permissionRelay', () =>
+        extensions.permissionRelay!({
+          request_id,
+          tool_name,
+          description,
+          input_preview,
+          pattern,
+        }),
+      ).then(decision => {
+        if (decision) {
+          void mcp.notification({
+            method: 'notifications/claude/channel/permission',
+            params: { request_id, behavior: decision.behavior },
+          })
+          log(`permission ${request_id} (${tool_name}): ${decision.behavior} (via relay)`)
+        }
+        // No decision (timeout or relay declined) → terminal prompt remains
+        // the only path. Do NOT emit deny here.
+      })
+    }
+    log(`permission ${request_id} (${tool_name}): awaiting terminal/relay`)
   },
 )
 
@@ -1188,12 +1232,69 @@ async function processDm(d: IgDm): Promise<void> {
   })
 }
 
+async function processMention(m: IgMention): Promise<void> {
+  // Dedup: same media_id + comment_id arriving twice in close succession is
+  // common from Meta. We just key on a synthetic id.
+  const dedupKey = `mention:${m.media_id}:${m.comment_id ?? 'caption'}`
+  const seen =
+    db.prepare('SELECT 1 FROM messages WHERE comment_id = ? LIMIT 1').get(dedupKey) as any
+  if (seen) return
+
+  // Persist a marker row so we don't re-notify on retry. We reuse the
+  // `messages` table with kind='mention' — the comment_id column holds the
+  // synthetic dedup key, the actual ig comment id (if any) goes in
+  // dm_message_id (overloaded — refactor later if needed).
+  try {
+    stmtInsertMsg.run(
+      dedupKey,
+      m.media_id,
+      /* parent_id */ null,
+      /* username  */ '_mention',
+      /* ig_user   */ null,
+      /* text      */ '',
+      m.timestamp,
+      0,
+    )
+    if (m.comment_id) {
+      db.prepare('UPDATE messages SET dm_message_id = ? WHERE comment_id = ?').run(m.comment_id, dedupKey)
+    }
+    db.prepare("UPDATE messages SET kind = 'mention' WHERE comment_id = ?").run(dedupKey)
+  } catch {
+    /* duplicate insert is fine */
+  }
+
+  const meta: Record<string, string> = {
+    chat_id: `mention;-;${m.media_id}`,
+    message_id: dedupKey,
+    user: 'system',
+    ts: new Date(m.timestamp * 1000).toISOString(),
+    local_time: toLocalIso(m.timestamp),
+    relationship: 'mention',
+    kind: 'mention',
+    media_id: m.media_id,
+  }
+  if (m.comment_id) meta.comment_id = m.comment_id
+
+  log(`>>> mention on ${m.media_id}${m.comment_id ? ` (comment ${m.comment_id})` : ' (caption)'}`)
+
+  const content = m.comment_id
+    ? `Someone tagged @briefing.juridico inside a comment on Instagram media ${m.media_id} (comment_id ${m.comment_id}). Use list_comments(${m.media_id}) or fetch the comment directly via the Graph API to read the actual text and decide whether to reply.`
+    : `Someone tagged @briefing.juridico in the caption of Instagram media ${m.media_id}. Fetch the post via the Graph API to read the caption and decide on action.`
+
+  void mcp.notification({
+    method: 'notifications/claude/channel',
+    params: { content, meta },
+  })
+}
+
 async function processWebhookPayload(payload: unknown): Promise<void> {
   try {
     const events = parseInstagramPayload(payload)
     for (const ev of events) {
       if (ev.kind === 'comment') {
         await processComment(ev)
+      } else if (ev.kind === 'mention') {
+        await processMention(ev)
       } else {
         await processDm(ev)
       }

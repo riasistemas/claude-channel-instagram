@@ -156,11 +156,14 @@ export interface InstagramExtensions {
    * forward the prompt to a different surface (e.g. WhatsApp interactive
    * buttons) and resolve to allow/deny when the user responds.
    *
-   * If not provided, the plugin uses the default permission protocol
-   * (text/button reply on the same Instagram channel — currently not
-   * supported on Instagram comments since posts have no DMs).
+   * Side-channel only: Claude Code's local terminal prompt always runs in
+   * parallel with this hook. Return a `PermissionDecision` to override the
+   * terminal (e.g. when a remote owner taps an approval button); return
+   * `null` to let the terminal prompt remain the sole path (e.g. on timeout
+   * or when the relay can't deliver). The plugin core never converts a null
+   * result into a default deny, so a no-op extension is safe.
    */
-  permissionRelay?(prompt: PermissionPrompt): Promise<PermissionDecision>
+  permissionRelay?(prompt: PermissionPrompt): Promise<PermissionDecision | null>
 }
 
 const NO_OP: Required<InstagramExtensions> = {
@@ -170,7 +173,7 @@ const NO_OP: Required<InstagramExtensions> = {
   onReplySent: async () => undefined,
   onInboundDm: async () => undefined,
   onDmSent: async () => undefined,
-  permissionRelay: async () => ({ behavior: 'deny' }),
+  permissionRelay: async () => null,
 }
 
 let cached: InstagramExtensions | null = null

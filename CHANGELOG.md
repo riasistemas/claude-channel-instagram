@@ -4,6 +4,68 @@ All notable changes to this plugin are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.1] — 2026-05-02
+
+### Added
+
+- **Mentions webhook handling.** The plugin now processes `field === 'mentions'`
+  in addition to `comments` and `messaging`. When someone tags
+  `@your_business_account` either in a post caption or inside a comment
+  thread (on third-party posts or your own), the plugin emits an MCP
+  notification with `meta.kind === 'mention'`, `meta.media_id`, and
+  `meta.comment_id` (when the mention is inside a comment). The Meta
+  webhook payload only carries IDs — Claude is expected to call
+  `list_comments(media_id)` or hit the Graph API directly to fetch the
+  surrounding text before deciding whether to reply.
+- New `_mention` synthetic username and `kind = 'mention'` row in the
+  `messages` table for dedup of repeated webhook deliveries.
+
+### Notes
+
+- Requires subscribing the `mentions` field in the Meta App webhook
+  config AND posting `subscribed_fields=comments,mentions,messages` to
+  `/{IG_BUSINESS_ID}/subscribed_apps`. Without those, Meta won't deliver
+  mention events even though the handler is in place.
+- Comments on **third-party posts that don't tag you** are NOT delivered
+  by Meta (no webhook for that). Active polling over a curated list of
+  monitored media is a separate (heavier) feature, not in this release.
+
+## [0.3.0] — 2026-04-30
+
+### Changed (BREAKING for extension authors)
+
+- **`permissionRelay` is now a side-channel, not a gatekeeper.** The plugin
+  core no longer awaits the relay synchronously and no longer defaults to
+  `'deny'` when no relay is configured. Permission requests run in two
+  parallel paths: Claude Code's local terminal prompt (always available)
+  and the optional `permissionRelay` extension hook (e.g. WhatsApp button).
+  Whichever resolves first wins; `null` from the relay means "no override"
+  and leaves the terminal prompt as the sole path.
+  - Old contract: `permissionRelay(prompt): Promise<PermissionDecision>`
+    — bloqueante, no-extension fell through to deny.
+  - New contract: `permissionRelay(prompt): Promise<PermissionDecision | null>`
+    — non-blocking, no-extension is a no-op (terminal prompt only).
+- The reference `ria-instagram-extensions/permission_relay.ts` returns
+  `null` on timeout or send failure instead of `{ behavior: 'deny' }`.
+  Existing custom extensions that always returned a decision keep working;
+  ones that returned `'deny'` on errors should switch to `null` so the
+  terminal prompt can take over instead.
+- Documentation: new `SETUP_WALKTHROUGH.md` covers tunnel setup, webhook
+  registration, owner / permission-flow options (terminal default,
+  WhatsApp side-channel, settings.json static, custom relay), and 10
+  gotchas distilled from real-world setup pain.
+
+### Notes
+
+- Single-user installs no longer need any extension at all to get
+  approval prompts — the terminal where Claude is running is the default
+  approval surface, just like every other Claude Code MCP plugin.
+- WhatsApp relay is now opt-in side-channel for distributed teams; the
+  reference extension carries upstream-baked defaults for
+  `WHATSAPP_PHONE_NUMBER_ID` and `WHATSAPP_PERMISSION_TARGET` — third
+  parties **must** override these env vars before going live, or fork the
+  reference extension and strip the defaults.
+
 ## [0.2.0] — 2026-04-27
 
 ### Added
