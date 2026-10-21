@@ -1,10 +1,10 @@
 # Instagram
 
-Connect an Instagram Business account to your Claude Code via the official Instagram Graph API. Inbound comment events arrive as MCP channel notifications; replies post back through the Graph API.
+Connect an Instagram Business account to your Claude Code via the official Instagram Graph API. Inbound comments and DMs arrive as MCP channel notifications; replies post back through the Graph API.
 
-The MCP server runs an HTTP webhook receiver with HMAC-SHA256 signature validation and exposes three tools to the assistant: `reply_comment`, `list_comments`, and `chat_messages`. **No Instagram Web reverse-engineering, no scraping** — uses Meta's official Graph API end-to-end.
+The MCP server runs an HTTP webhook receiver with HMAC-SHA256 signature validation and exposes five tools to the assistant: `reply_comment`, `list_comments`, `send_private_reply`, `send_dm`, and `chat_messages`. **No Instagram Web reverse-engineering, no scraping** — uses Meta's official Graph API end-to-end.
 
-> **Scope of v0.1**: comments only. DMs are routed through Meta's Messenger Platform, which requires a separate App Review for `instagram_manage_messages` and is on the v0.2 roadmap.
+> **Where it runs**: Claude Code and Cowork. The MCP server is a local process that receives Meta's webhooks, so on claude.ai (web, desktop chat, mobile) the skills load but the Instagram tools are not available.
 
 ## Prerequisites
 
@@ -27,6 +27,7 @@ You'll need five values from the Meta dashboard:
 - **Access Token** — generated for a System User in Business Manager (recommended; long-lived, doesn't auto-expire) with these permissions:
   - `instagram_basic`
   - `instagram_manage_comments`
+  - `instagram_manage_messages` (DMs and comment-to-DM)
 - A **Verify Token** of your own — any random string; you'll paste the same value into Meta when configuring the webhook URL.
 
 ```sh
@@ -39,10 +40,12 @@ openssl rand -hex 32
 **2. Install the plugin.**
 
 ```
-/plugin marketplace add github://riasistemas/claude-channel-instagram
+/plugin marketplace add riasistemas/claude-plugins
 /plugin install instagram@riasistemas
 /reload-plugins
 ```
+
+Or install it from the [Claude plugin directory](https://claude.ai/directory) — it syncs to Claude Code as `instagram@anthropic-plugin-directory`.
 
 **3. Save credentials.**
 
@@ -79,6 +82,8 @@ Click **Verify and save**, then subscribe to the **`comments`** field.
 claude --channels plugin:instagram@riasistemas
 ```
 
+If you installed from the directory, use `plugin:instagram@anthropic-plugin-directory`.
+
 **7. Allow accounts.**
 
 Default `policy` is `allowlist` — comments from unknown usernames are dropped silently. Add the usernames that should reach you:
@@ -97,7 +102,9 @@ For replies-by-mention only (no full passthrough), see [ACCESS.md](./ACCESS.md).
 | --- | --- |
 | `reply_comment` | Reply to an inbound comment. Pass the `comment_id` from the inbound notification meta and the reply text. The reply nests under the original. Auto-trims to 2200 chars. |
 | `list_comments` | List recent comments on a specific media (post or Reel) by id. Useful when you want to read context beyond what the webhook delivered. |
-| `chat_messages` | Read recent comment history from the local SQLite, optionally scoped to one username. |
+| `send_private_reply` | Open a DM with the author of a public comment (comment-to-DM). One reply per comment, within 7 days of the comment. |
+| `send_dm` | Send a DM (text, image or OGG/opus audio) inside the 24h window after the user's last message. |
+| `chat_messages` | Read recent message history (comments and DMs) from the local SQLite, optionally scoped to one chat. |
 
 Inbound comments arrive as `notifications/claude/channel` with meta containing `chat_id`, `message_id` (the comment id), `user` (`@username`), `media_id`, `media_permalink`, and an optional `parent_comment_id` if it's a reply within a thread.
 
@@ -107,7 +114,7 @@ Inbound comments arrive as `notifications/claude/channel` with meta containing `
 
 | Var | What it is |
 | --- | --- |
-| `INSTAGRAM_ACCESS_TOKEN` | Long-lived token with `instagram_basic` + `instagram_manage_comments` |
+| `INSTAGRAM_ACCESS_TOKEN` | Long-lived token with `instagram_basic` + `instagram_manage_comments` + `instagram_manage_messages` |
 | `INSTAGRAM_BUSINESS_ACCOUNT_ID` | The Instagram Business account ID |
 | `INSTAGRAM_VERIFY_TOKEN` | Random string you choose; paste same value into Meta's webhook config |
 | `INSTAGRAM_APP_SECRET` | Meta App Secret used for HMAC-SHA256 signature verification |
@@ -137,7 +144,7 @@ Quick reference: usernames stored without `@`. Default policy is `allowlist`. Se
 
 ## What you don't get
 
-- **DMs** — `instagram_manage_messages` requires a separate App Review and Messenger Platform setup. Planned for v0.2.
+- **DMs outside the 24h window** — Meta only allows replies within 24 hours of the user's last message; `send_dm` returns an error after that (no `HUMAN_AGENT` tag support yet).
 - **Posting / publishing** — out of scope for a channel plugin. Use the [`/instagram` skill](https://github.com/anthropics/claude-plugins-official) or the Graph API directly for `instagram_content_publish`.
 - **Buffered inbound when offline** — Meta retries webhook deliveries for up to 24 hours. Longer outages drop messages.
 
