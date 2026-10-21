@@ -15,6 +15,8 @@
  *  - instagram_business_manage_comments  (read + reply + delete)
  */
 
+import { readFileSync, writeFileSync } from 'fs'
+
 const GRAPH_API_VERSION = process.env.INSTAGRAM_GRAPH_API_VERSION ?? 'v24.0'
 const API = process.env.INSTAGRAM_API_BASE ?? `https://graph.instagram.com/${GRAPH_API_VERSION}`
 
@@ -213,9 +215,7 @@ export async function uploadMessageAttachment(
   contentType: string,
   accessToken: string,
 ): Promise<{ attachment_id: string }> {
-  const file = Bun.file(filePath)
-  const buf = await file.arrayBuffer()
-  const blob = new Blob([buf], { type: contentType })
+  const blob = new Blob([readFileSync(filePath)], { type: contentType })
   const form = new FormData()
   form.append('message', JSON.stringify({
     attachment: { type, payload: { is_reusable: true } },
@@ -301,7 +301,7 @@ export async function downloadAttachment(
   }
   const contentType = res.headers.get('content-type') ?? undefined
   const buf = await res.arrayBuffer()
-  await Bun.write(destPath, buf)
+  writeFileSync(destPath, Buffer.from(buf))
   return { size: buf.byteLength, contentType }
 }
 

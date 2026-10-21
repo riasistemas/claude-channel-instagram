@@ -11,11 +11,12 @@ import {
   ListToolsRequestSchema,
   CallToolRequestSchema,
 } from '@modelcontextprotocol/sdk/types.js'
-import { Database } from 'bun:sqlite'
-import { readFileSync, writeFileSync, readdirSync, mkdirSync, rmSync, existsSync, statSync } from 'fs'
+import { DatabaseSync, type SQLInputValue } from 'node:sqlite'
+import { createServer } from 'node:http'
+import { readFileSync, writeFileSync, readdirSync, mkdirSync, rmSync, renameSync, existsSync, statSync } from 'fs'
 import { homedir } from 'os'
 import { extname, join } from 'path'
-import { randomBytes } from 'crypto'
+import { createHmac, randomBytes } from 'crypto'
 import { z } from 'zod'
 
 import * as graph from './lib/graph-api.ts'
@@ -138,7 +139,21 @@ function usernameFromChatId(chatId: string): string {
 
 // ── SQLite history ──────────────────────────────────────────────────────────
 
-const db = new Database(DB_PATH)
+const db = new DatabaseSync(DB_PATH)
+
+// bun:sqlite bound `undefined` as NULL and booleans as 0/1; node:sqlite
+// throws on both. Normalize so call sites keep the old behavior.
+function bind(args: unknown[]): SQLInputValue[] {
+  return args.map(a => (a === undefined ? null : typeof a === 'boolean' ? Number(a) : a)) as SQLInputValue[]
+}
+function prepare(sql: string) {
+  const stmt = db.prepare(sql)
+  return {
+    run: (...args: unknown[]) => stmt.run(...bind(args)),
+    get: (...args: unknown[]) => stmt.get(...bind(args)),
+    all: (...args: unknown[]) => stmt.all(...bind(args)),
+  }
+}
 db.exec('PRAGMA journal_mode=WAL')
 db.exec(`
   CREATE TABLE IF NOT EXISTS messages (
@@ -164,7 +179,7 @@ db.exec(`
 // PRAGMA table_info returns the current shape; we only ALTER if the column
 // is missing. New columns are nullable so existing rows keep working.
 function ensureColumn(name: string, ddl: string): void {
-  const cols = db.prepare(`PRAGMA table_info(messages)`).all() as { name: string }[]
+  const cols = prepare(`PRAGMA table_info(messages)`).all() as { name: string }[]
   if (!cols.some(c => c.name === name)) {
     db.exec(`ALTER TABLE messages ADD COLUMN ${name} ${ddl}`)
   }
@@ -180,34 +195,34 @@ db.exec(
    ON messages(dm_message_id) WHERE dm_message_id IS NOT NULL`,
 )
 
-const stmtInsertMsg = db.prepare(
+const stmtInsertMsg = prepare(
   `INSERT OR IGNORE INTO messages
    (comment_id, media_id, parent_comment_id, username, ig_user_id, text, timestamp, is_from_me)
    VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
 )
-const stmtInsertDm = db.prepare(
+const stmtInsertDm = prepare(
   `INSERT OR IGNORE INTO messages
    (dm_message_id, media_id, username, ig_user_id, recipient_id, text, timestamp, is_from_me, kind, media_path, transcript)
    VALUES (?, '', ?, ?, ?, ?, ?, ?, 'dm', ?, ?)`,
 )
-const stmtLastDmRecipient = db.prepare(
+const stmtLastDmRecipient = prepare(
   `SELECT ig_user_id FROM messages
    WHERE kind = 'dm' AND username = ? AND ig_user_id IS NOT NULL
    ORDER BY timestamp DESC LIMIT 1`,
 )
-const stmtLastInboundDmTs = db.prepare(
+const stmtLastInboundDmTs = prepare(
   `SELECT timestamp FROM messages
    WHERE kind = 'dm' AND username = ? AND is_from_me = 0
    ORDER BY timestamp DESC LIMIT 1`,
 )
-const stmtSeenUsername = db.prepare(`SELECT 1 FROM messages WHERE username = ? LIMIT 1`)
-const stmtSeenDmFromUser = db.prepare(
+const stmtSeenUsername = prepare(`SELECT 1 FROM messages WHERE username = ? LIMIT 1`)
+const stmtSeenDmFromUser = prepare(
   `SELECT 1 FROM messages WHERE kind = 'dm' AND username = ? AND is_from_me = 0 LIMIT 1`,
 )
-const stmtHistoryByUser = db.prepare(
+const stmtHistoryByUser = prepare(
   `SELECT * FROM messages WHERE username = ? ORDER BY timestamp DESC LIMIT ?`,
 )
-const stmtAllHistory = db.prepare(`SELECT * FROM messages ORDER BY timestamp DESC LIMIT ?`)
+const stmtAllHistory = prepare(`SELECT * FROM messages ORDER BY timestamp DESC LIMIT ?`)
 
 // ── Outbound media tokens ───────────────────────────────────────────────────
 //
@@ -365,7 +380,7 @@ function checkApprovals(): void {
 
 function verifyHubSignature(rawBody: string, signatureHeader: string | null): boolean {
   if (!signatureHeader) return false
-  const expected = 'sha256=' + new Bun.CryptoHasher('sha256', APP_SECRET).update(rawBody).digest('hex')
+  const expected = 'sha256=' + createHmac('sha256', APP_SECRET).update(rawBody).digest('hex')
   if (expected.length !== signatureHeader.length) return false
   let mismatch = 0
   for (let i = 0; i < expected.length; i++) {
@@ -747,7 +762,7 @@ mcp.setRequestHandler(CallToolRequestSchema, async req => {
 
         // Look up the original comment to give onReplySent context.
         try {
-          const original = db.prepare('SELECT * FROM messages WHERE comment_id = ?').get(commentId) as any
+          const original = prepare('SELECT * FROM messages WHERE comment_id = ?').get(commentId) as any
           await runHook(log, 'onReplySent', () =>
             extensions.onReplySent?.({
               comment_id: commentId,
@@ -806,7 +821,7 @@ mcp.setRequestHandler(CallToolRequestSchema, async req => {
         log(`private_reply on ${commentId}: "${text.slice(0, 60)}" → ${result.message_id}`)
 
         // Resolve original comment author so the DM lands in the right chat thread.
-        const original = db.prepare('SELECT * FROM messages WHERE comment_id = ?').get(commentId) as any
+        const original = prepare('SELECT * FROM messages WHERE comment_id = ?').get(commentId) as any
         const username = original?.username ?? ''
         const recipientId = result.recipient_id ?? original?.ig_user_id ?? null
 
@@ -1017,8 +1032,7 @@ async function downloadDmAttachment(
     const realExt = extFromMime(result.contentType, guessedExt || '.bin')
     if (realExt !== extname(tmpPath)) {
       const renamed = tmpPath.replace(/\.[^.]+$/, '') + realExt
-      await Bun.write(renamed, Bun.file(tmpPath))
-      rmSync(tmpPath, { force: true })
+      renameSync(tmpPath, renamed)
       return renamed
     }
     return tmpPath
@@ -1030,7 +1044,7 @@ async function downloadDmAttachment(
 
 async function processComment(c: IgComment): Promise<void> {
   const isFromMe =
-    (db.prepare('SELECT 1 FROM messages WHERE comment_id = ? AND is_from_me = 1').get(c.comment_id) as any) != null
+    (prepare('SELECT 1 FROM messages WHERE comment_id = ? AND is_from_me = 1').get(c.comment_id) as any) != null
   if (isFromMe) return
 
   const decision = gate(c.username, c.media_id, c.text)
@@ -1116,7 +1130,7 @@ async function processDm(d: IgDm): Promise<void> {
   // Echo: Meta repeats our outbound DMs through the webhook with `is_echo`.
   if (d.is_echo) return
   const isFromMe =
-    (db.prepare('SELECT 1 FROM messages WHERE dm_message_id = ? AND is_from_me = 1').get(d.message_id) as any) != null
+    (prepare('SELECT 1 FROM messages WHERE dm_message_id = ? AND is_from_me = 1').get(d.message_id) as any) != null
   if (isFromMe) return
 
   // Webhook gives sender.id — resolve to username for gate + chat_id.
@@ -1237,7 +1251,7 @@ async function processMention(m: IgMention): Promise<void> {
   // common from Meta. We just key on a synthetic id.
   const dedupKey = `mention:${m.media_id}:${m.comment_id ?? 'caption'}`
   const seen =
-    db.prepare('SELECT 1 FROM messages WHERE comment_id = ? LIMIT 1').get(dedupKey) as any
+    prepare('SELECT 1 FROM messages WHERE comment_id = ? LIMIT 1').get(dedupKey) as any
   if (seen) return
 
   // Persist a marker row so we don't re-notify on retry. We reuse the
@@ -1256,9 +1270,9 @@ async function processMention(m: IgMention): Promise<void> {
       0,
     )
     if (m.comment_id) {
-      db.prepare('UPDATE messages SET dm_message_id = ? WHERE comment_id = ?').run(m.comment_id, dedupKey)
+      prepare('UPDATE messages SET dm_message_id = ? WHERE comment_id = ?').run(m.comment_id, dedupKey)
     }
-    db.prepare("UPDATE messages SET kind = 'mention' WHERE comment_id = ?").run(dedupKey)
+    prepare("UPDATE messages SET kind = 'mention' WHERE comment_id = ?").run(dedupKey)
   } catch {
     /* duplicate insert is fine */
   }
@@ -1330,80 +1344,99 @@ log('MCP connected')
 
 // ── HTTP webhook receiver ──────────────────────────────────────────────────
 
-const httpServer = Bun.serve({
-  port: WEBHOOK_PORT,
-  async fetch(req) {
-    const url = new URL(req.url)
+async function handleRequest(req: Request): Promise<Response> {
+  const url = new URL(req.url)
 
-    if (url.pathname === '/health') {
-      return new Response('ok', { status: 200 })
+  if (url.pathname === '/health') {
+    return new Response('ok', { status: 200 })
+  }
+
+  // Outbound media: Meta fetches `/media/<token>` to attach DM media.
+  // Single-use; the token is consumed on first successful read.
+  if (req.method === 'GET' && url.pathname.startsWith('/media/')) {
+    const token = url.pathname.slice('/media/'.length)
+    const entry = mediaTokens.get(token)
+    if (!entry || entry.expiresAt <= Date.now()) {
+      mediaTokens.delete(token)
+      return new Response('not found', { status: 404 })
     }
-
-    // Outbound media: Meta fetches `/media/<token>` to attach DM media.
-    // Single-use; the token is consumed on first successful read.
-    if (req.method === 'GET' && url.pathname.startsWith('/media/')) {
-      const token = url.pathname.slice('/media/'.length)
-      const entry = mediaTokens.get(token)
-      if (!entry || entry.expiresAt <= Date.now()) {
+    try {
+      if (!existsSync(entry.path)) {
         mediaTokens.delete(token)
         return new Response('not found', { status: 404 })
       }
-      try {
-        const file = Bun.file(entry.path)
-        if (!(await file.exists())) {
-          mediaTokens.delete(token)
-          return new Response('not found', { status: 404 })
-        }
-        mediaTokens.delete(token)
-        return new Response(file, {
-          status: 200,
-          headers: { 'Content-Type': entry.contentType, 'Cache-Control': 'no-store' },
-        })
-      } catch (err) {
-        log(`media serve error (${token}): ${err}`)
-        return new Response('internal error', { status: 500 })
-      }
+      mediaTokens.delete(token)
+      return new Response(readFileSync(entry.path), {
+        status: 200,
+        headers: { 'Content-Type': entry.contentType, 'Cache-Control': 'no-store' },
+      })
+    } catch (err) {
+      log(`media serve error (${token}): ${err}`)
+      return new Response('internal error', { status: 500 })
     }
+  }
 
-    // Webhook verification (Meta calls this once when you save the URL)
-    if (req.method === 'GET' && url.pathname === '/webhook') {
-      const mode = url.searchParams.get('hub.mode')
-      const token = url.searchParams.get('hub.verify_token')
-      const challenge = url.searchParams.get('hub.challenge')
-      if (mode === 'subscribe' && token === VERIFY_TOKEN && challenge) {
-        log('webhook verified')
-        return new Response(challenge, { status: 200 })
-      }
-      log('webhook verification failed')
-      return new Response('forbidden', { status: 403 })
+  // Webhook verification (Meta calls this once when you save the URL)
+  if (req.method === 'GET' && url.pathname === '/webhook') {
+    const mode = url.searchParams.get('hub.mode')
+    const token = url.searchParams.get('hub.verify_token')
+    const challenge = url.searchParams.get('hub.challenge')
+    if (mode === 'subscribe' && token === VERIFY_TOKEN && challenge) {
+      log('webhook verified')
+      return new Response(challenge, { status: 200 })
     }
+    log('webhook verification failed')
+    return new Response('forbidden', { status: 403 })
+  }
 
-    if (req.method === 'POST' && url.pathname === '/webhook') {
-      const rawBody = await req.text()
-      const sig = req.headers.get('x-hub-signature-256')
-      if (!verifyHubSignature(rawBody, sig)) {
-        log('webhook signature invalid')
-        return new Response('invalid signature', { status: 401 })
-      }
-      try {
-        const payload = JSON.parse(rawBody)
-        log(`webhook received (${rawBody.length} bytes)`)
-        void processWebhookPayload(payload)
-      } catch (err) {
-        log(`webhook parse error: ${err}`)
-      }
-      return new Response('ok', { status: 200 })
+  if (req.method === 'POST' && url.pathname === '/webhook') {
+    const rawBody = await req.text()
+    const sig = req.headers.get('x-hub-signature-256')
+    if (!verifyHubSignature(rawBody, sig)) {
+      log('webhook signature invalid')
+      return new Response('invalid signature', { status: 401 })
     }
+    try {
+      const payload = JSON.parse(rawBody)
+      log(`webhook received (${rawBody.length} bytes)`)
+      void processWebhookPayload(payload)
+    } catch (err) {
+      log(`webhook parse error: ${err}`)
+    }
+    return new Response('ok', { status: 200 })
+  }
 
-    return new Response('not found', { status: 404 })
-  },
-  error(err) {
+  return new Response('not found', { status: 404 })
+}
+
+// node:http adapter — buffers the request into a Fetch `Request` so the
+// handler above stays runtime-agnostic.
+const httpServer = createServer(async (nodeReq, nodeRes) => {
+  let res: Response
+  try {
+    const chunks: Buffer[] = []
+    for await (const chunk of nodeReq) chunks.push(chunk as Buffer)
+    const headers = new Headers()
+    for (const [k, v] of Object.entries(nodeReq.headers)) {
+      if (v !== undefined) headers.set(k, Array.isArray(v) ? v.join(', ') : v)
+    }
+    const hasBody = nodeReq.method !== 'GET' && nodeReq.method !== 'HEAD'
+    res = await handleRequest(new Request(`http://localhost${nodeReq.url ?? '/'}`, {
+      method: nodeReq.method,
+      headers,
+      body: hasBody ? Buffer.concat(chunks) : undefined,
+    }))
+  } catch (err) {
     log(`http server error: ${err}`)
-    return new Response('internal error', { status: 500 })
-  },
+    res = new Response('internal error', { status: 500 })
+  }
+  nodeRes.writeHead(res.status, Object.fromEntries(res.headers))
+  nodeRes.end(Buffer.from(await res.arrayBuffer()))
 })
-
-log(`webhook listening on http://localhost:${httpServer.port}/webhook`)
+httpServer.on('error', err => log(`http server error: ${err}`))
+httpServer.listen(WEBHOOK_PORT, () => {
+  log(`webhook listening on http://localhost:${WEBHOOK_PORT}/webhook`)
+})
 
 // ── Shutdown ────────────────────────────────────────────────────────────────
 
