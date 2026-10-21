@@ -9,9 +9,16 @@ jobs:
   typecheck:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: oven-sh/setup-bun@v2
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
         with:
-          bun-version: 1.2.14
-      - run: bun install --frozen-lockfile
-      - run: bunx tsc --noEmit -p tsconfig.json
+          node-version: 22
+      - run: npm install --no-audit --no-fund
+      - run: npm run typecheck
+      - run: npm run build
+      - name: dist/ matches the TypeScript source
+        run: git diff --exit-code dist/
+      - name: server loads on Node
+        run: |
+          out=$(node dist/server.js 2>&1 || true)
+          echo "$out" | grep -q 'missing required env var'

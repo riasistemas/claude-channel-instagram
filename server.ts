@@ -5,21 +5,15 @@
  * channel notifications, and replies through the Graph API.
  */
 
-import { Server } from '@modelcontextprotocol/sdk/server/index.js'
-import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js'
-import {
-  ListToolsRequestSchema,
-  CallToolRequestSchema,
-} from '@modelcontextprotocol/sdk/types.js'
 import { DatabaseSync, type SQLInputValue } from 'node:sqlite'
 import { createServer } from 'node:http'
 import { readFileSync, writeFileSync, readdirSync, mkdirSync, rmSync, renameSync, existsSync, statSync } from 'fs'
 import { homedir } from 'os'
 import { extname, join } from 'path'
 import { createHmac, randomBytes } from 'crypto'
-import { z } from 'zod'
 
 import * as graph from './lib/graph-api.ts'
+import { McpServer } from './lib/mcp.ts'
 import { transcribeAudioFile } from './lib/audio.ts'
 import { loadExtensions, runHook, type InstagramExtensions } from './lib/extensions.ts'
 
@@ -530,7 +524,7 @@ function parseInstagramPayload(payload: any): IgEvent[] {
 
 // ── MCP server ──────────────────────────────────────────────────────────────
 
-const mcp = new Server(
+const mcp = new McpServer(
   { name: 'instagram', version: '1.0.0' },
   {
     capabilities: {
@@ -564,7 +558,7 @@ const mcp = new Server(
   },
 )
 
-mcp.setRequestHandler(ListToolsRequestSchema, async () => ({
+mcp.setRequestHandler('tools/list', async () => ({
   tools: [
     {
       name: 'reply_comment',
@@ -686,17 +680,10 @@ let extensions: InstagramExtensions = {}
 // Without an extension, this handler is a no-op and the terminal prompt is
 // the sole path.
 mcp.setNotificationHandler(
-  z.object({
-    method: z.literal('notifications/claude/channel/permission_request'),
-    params: z.object({
-      request_id: z.string(),
-      tool_name: z.string(),
-      description: z.string(),
-      input_preview: z.string(),
-    }),
-  }),
+  'notifications/claude/channel/permission_request',
   async ({ params }) => {
-    const { request_id, tool_name, description, input_preview } = params
+    const { request_id, tool_name, description, input_preview } = params ?? {}
+    if (![request_id, tool_name, description, input_preview].every(v => typeof v === 'string')) return
     const pattern = `${tool_name}:${description.split(/\s+/)[0] ?? ''}`
 
     // Side-channel relay (e.g. WhatsApp button) runs async in parallel with
@@ -735,7 +722,7 @@ mcp.setNotificationHandler(
   },
 )
 
-mcp.setRequestHandler(CallToolRequestSchema, async req => {
+mcp.setRequestHandler('tools/call', async req => {
   const args = (req.params.arguments ?? {}) as Record<string, unknown>
   try {
     switch (req.params.name) {
@@ -1338,8 +1325,7 @@ extensions = await loadExtensions({
 
 setInterval(checkApprovals, 5000).unref()
 
-const transport = new StdioServerTransport()
-await mcp.connect(transport)
+await mcp.connect()
 log('MCP connected')
 
 // ── HTTP webhook receiver ──────────────────────────────────────────────────
