@@ -8,6 +8,9 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Fixed
 
+- README install step adds the `riasistemas/claude-plugins` catalog. The
+  old `github://riasistemas/claude-channel-instagram` source stopped working
+  when `marketplace.json` moved to the catalog.
 - The server now reads `~/.claude/channels/instagram/.env`, where
   `/instagram:configure` saves the credentials. Before, it only read the
   process env, which a plugin-spawned server doesn't get, so it exited on

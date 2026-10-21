@@ -40,10 +40,12 @@ openssl rand -hex 32
 **2. Install the plugin.**
 
 ```
-/plugin marketplace add github://riasistemas/claude-channel-instagram
+/plugin marketplace add riasistemas/claude-plugins
 /plugin install instagram@riasistemas
 /reload-plugins
 ```
+
+Or install it from the [Claude plugin directory](https://claude.ai/directory) — it syncs to Claude Code as `instagram@anthropic-plugin-directory`.
 
 **3. Save credentials.**
 
@@ -79,6 +81,8 @@ Click **Verify and save**, then subscribe to the **`comments`** field.
 ```sh
 claude --channels plugin:instagram@riasistemas
 ```
+
+If you installed from the directory, use `plugin:instagram@anthropic-plugin-directory`.
 
 **7. Allow accounts.**
 
