@@ -4,6 +4,25 @@ All notable changes to this plugin are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.5] — 2026-10-21
+
+### Added
+
+- `author`, `homepage`, `repository` and `license` in `plugin.json`, and a
+  plugin icon (`.claude-plugin/icon.png`, 1024×1024).
+
+### Changed
+
+- When the Instagram tools aren't available (claude.ai web, desktop chat,
+  mobile), `/instagram:configure` points to the plugin's homepage for setup
+  options, in addition to Claude Code and Cowork.
+- README links the homepage and states that the plugin is not affiliated
+  with or endorsed by Meta or Anthropic.
+
+### Removed
+
+- `.npmrc` (only set the public registry, which is npm's default).
+
 ## [0.3.4] — 2026-10-21
 
 ### Fixed

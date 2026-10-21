@@ -4,7 +4,7 @@ Connect an Instagram Business account to your Claude Code via the official Insta
 
 The MCP server runs an HTTP webhook receiver with HMAC-SHA256 signature validation and exposes five tools to the assistant: `reply_comment`, `list_comments`, `send_private_reply`, `send_dm`, and `chat_messages`. **No Instagram Web reverse-engineering, no scraping** — uses Meta's official Graph API end-to-end.
 
-> **Where it runs**: Claude Code and Cowork. The MCP server is a local process that receives Meta's webhooks, so on claude.ai (web, desktop chat, mobile) the skills load but the Instagram tools are not available.
+> **Where it runs**: Claude Code and Cowork. The MCP server is a local process that receives Meta's webhooks, so on claude.ai (web, desktop chat, mobile) the skills load but the Instagram tools are not available. Setup options: [claude-plugins.riasistemas.com.br/instagram](https://claude-plugins.riasistemas.com.br/instagram).
 
 ## Prerequisites
 
@@ -165,4 +165,4 @@ Apache-2.0.
 
 ## Maintainer
 
-Maintained by [RIA Systems](https://github.com/riasistemas), a Meta Tech Provider. Issues and PRs welcome at the [standalone repo](https://github.com/riasistemas/claude-channel-instagram).
+Maintained by [RIA Systems](https://github.com/riasistemas). Uses the official Instagram API; not affiliated with or endorsed by Meta or Anthropic. Issues and PRs welcome at the [standalone repo](https://github.com/riasistemas/claude-channel-instagram).

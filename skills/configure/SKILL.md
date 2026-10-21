@@ -84,7 +84,9 @@ webhooks, so it works in Claude Code and Cowork only. If the Instagram
 tools (`reply_comment`, `send_dm`, …) aren't available in this session —
 for example on claude.ai web, desktop chat or mobile — say so plainly and
 point the user to Claude Code or Cowork instead of walking them through
-credentials.
+credentials. For setup options, link the plugin's homepage:
+https://claude-plugins.riasistemas.com.br/instagram?src=plugin (English:
+https://claude-plugins.riasistemas.com.br/en/instagram?src=plugin).
 
 ### `<key>=<value>` — save one credential
 
