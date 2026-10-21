@@ -4,6 +4,18 @@ All notable changes to this plugin are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.3] — 2026-10-21
+
+### Changed
+
+- **Zero runtime dependencies, readable `dist/`.** The 0.3.2 bundle
+  (~620 KB) was over the directory's 256 KiB per-file limit, so it was
+  held as code the scan can't read. `@modelcontextprotocol/sdk` and `zod`
+  are replaced by `lib/mcp.ts`, a small MCP stdio server, and `dist/` is
+  plain per-file `tsc` output (largest file ~57 KB), comments kept.
+- Dev tooling exact-pinned (`typescript` 5.9.3, `@types/node` 24.19.2);
+  CI runs on Node only and checks that `dist/` matches the source.
+
 ## [0.3.2] — 2026-10-21
 
 ### Changed
