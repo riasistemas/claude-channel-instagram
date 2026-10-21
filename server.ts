@@ -7,7 +7,7 @@
 
 import { DatabaseSync, type SQLInputValue } from 'node:sqlite'
 import { createServer } from 'node:http'
-import { readFileSync, writeFileSync, readdirSync, mkdirSync, rmSync, renameSync, existsSync, statSync } from 'fs'
+import { readFileSync, writeFileSync, readdirSync, mkdirSync, rmSync, renameSync, existsSync, statSync, chmodSync } from 'fs'
 import { homedir } from 'os'
 import { extname, join } from 'path'
 import { createHmac, randomBytes } from 'crypto'
@@ -19,10 +19,25 @@ import { loadExtensions, runHook, type InstagramExtensions } from './lib/extensi
 
 // ── Config ──────────────────────────────────────────────────────────────────
 
+const STATE_DIR = process.env.INSTAGRAM_STATE_DIR ?? join(homedir(), '.claude', 'channels', 'instagram')
+const ENV_FILE = join(STATE_DIR, '.env')
+
+// Load ~/.claude/channels/instagram/.env into process.env. Real env wins.
+// Plugin-spawned servers don't get an env block — /instagram:configure
+// writes the credentials here.
+try {
+  // Credentials — lock to owner. No-op on Windows.
+  chmodSync(ENV_FILE, 0o600)
+  for (const line of readFileSync(ENV_FILE, 'utf8').split(/\r?\n/)) {
+    const m = line.match(/^(\w+)=(.*)$/)
+    if (m && process.env[m[1]] === undefined) process.env[m[1]] = m[2]
+  }
+} catch {}
+
 function requireEnv(name: string): string {
   const v = process.env[name]
   if (!v) {
-    process.stderr.write(`instagram channel: missing required env var ${name}\n`)
+    process.stderr.write(`instagram channel: missing required env var ${name} — run /instagram:configure\n`)
     process.exit(1)
   }
   return v
@@ -35,7 +50,6 @@ const APP_SECRET = requireEnv('INSTAGRAM_APP_SECRET')
 
 const WEBHOOK_PORT = Number(process.env.INSTAGRAM_PORT ?? '3790')
 const TIMEZONE = process.env.INSTAGRAM_TIMEZONE ?? 'UTC'
-const STATE_DIR = process.env.INSTAGRAM_STATE_DIR ?? join(homedir(), '.claude', 'channels', 'instagram')
 const ACCESS_PATH = join(STATE_DIR, 'access.json')
 const DB_PATH = join(STATE_DIR, 'messages.db')
 const APPROVED_DIR = join(STATE_DIR, 'approved')

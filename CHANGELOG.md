@@ -8,6 +8,11 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Fixed
 
+- The server now reads `~/.claude/channels/instagram/.env`, where
+  `/instagram:configure` saves the credentials. Before, it only read the
+  process env, which a plugin-spawned server doesn't get, so it exited on
+  boot with "missing required env var". Real env vars still win over the
+  file, and the missing-var error now points to `/instagram:configure`.
 - Docs no longer say DMs are "planned for v0.2": DMs shipped in v0.2.0.
   README and `/instagram:configure` now list all five tools, the
   `instagram_manage_messages` permission, and the 24h / 7-day windows.
