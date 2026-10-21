@@ -8,7 +8,7 @@ The MCP server runs an HTTP webhook receiver with HMAC-SHA256 signature validati
 
 ## Prerequisites
 
-- [Bun](https://bun.sh) — the MCP server runs on Bun. Install with `curl -fsSL https://bun.sh/install | bash`.
+- [Node.js](https://nodejs.org) 22.13 or newer — the MCP server runs on Node (it uses the built-in `node:sqlite`).
 - A [Meta Developer account](https://developers.facebook.com/) with a Meta App that has the **Instagram Graph API** product added.
 - An Instagram Business account (or Creator account) connected through Business Manager — both the app and the Instagram account must live in the same business portfolio for tokens to work cleanly.
 - A way to expose your local webhook over HTTPS: [cloudflared](https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/install-and-setup/installation/) or [ngrok](https://ngrok.com/), or any HTTPS tunnel.
