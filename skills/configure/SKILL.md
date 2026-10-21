@@ -25,7 +25,7 @@ The server fails fast if any of these are missing:
 
 | Var | What it is | Where to find it |
 |---|---|---|
-| `INSTAGRAM_ACCESS_TOKEN` | Long-lived token with `instagram_basic` + `instagram_manage_comments` | Business Manager → System Users → Generate Token |
+| `INSTAGRAM_ACCESS_TOKEN` | Long-lived token with `instagram_basic` + `instagram_manage_comments` + `instagram_manage_messages` | Business Manager → System Users → Generate Token |
 | `INSTAGRAM_BUSINESS_ACCOUNT_ID` | The Instagram Business account ID | Meta App Dashboard → Instagram Graph API → API Setup |
 | `INSTAGRAM_VERIFY_TOKEN` | Random string you choose; same value goes into Meta's webhook config | Pick one (e.g. `openssl rand -hex 32`) |
 | `INSTAGRAM_APP_SECRET` | Meta App Secret used for HMAC-SHA256 signature verification | Meta App Dashboard → App Settings → Basic |
@@ -73,10 +73,18 @@ Read state files and give the user a complete picture:
    - Token + at least one allowed username → *"Ready. Comments from those
      usernames on your Instagram posts will reach the assistant."*
 
-**Note about WhatsApp parity**: unlike Telegram/Discord, Instagram doesn't
-expose private messaging through this plugin's v0.1 — it focuses on
-**comments only**. DMs need `instagram_manage_messages` and a separate
-Messenger Platform setup (planned for v0.2).
+**What the channel covers**: inbound comments and DMs. Replies go out as
+public comment replies (`reply_comment`), a private reply that opens a DM
+with a commenter (`send_private_reply`, once per comment, within 7 days),
+and DMs inside Meta's 24h window (`send_dm`). DMs and comment-to-DM need
+`instagram_manage_messages` on the token.
+
+**Where it runs**: the channel is a local MCP server that receives Meta's
+webhooks, so it works in Claude Code and Cowork only. If the Instagram
+tools (`reply_comment`, `send_dm`, …) aren't available in this session —
+for example on claude.ai web, desktop chat or mobile — say so plainly and
+point the user to Claude Code or Cowork instead of walking them through
+credentials.
 
 ### `<key>=<value>` — save one credential
 
@@ -115,4 +123,5 @@ other unrelated keys are in the file).
   itself binds to localhost on `INSTAGRAM_PORT`.
 - Meta Apps in **Development Mode** only deliver webhook events for users
   with a role on the app (Admin / Developer / Tester). Going Live
-  requires App Review for `instagram_manage_comments`.
+  requires App Review for `instagram_manage_comments` and
+  `instagram_manage_messages`.

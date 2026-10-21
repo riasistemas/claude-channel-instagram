@@ -4,6 +4,17 @@ All notable changes to this plugin are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.4] — 2026-10-21
+
+### Fixed
+
+- Docs no longer say DMs are "planned for v0.2": DMs shipped in v0.2.0.
+  README and `/instagram:configure` now list all five tools, the
+  `instagram_manage_messages` permission, and the 24h / 7-day windows.
+- README and `/instagram:configure` state where the channel runs (Claude
+  Code and Cowork). On claude.ai the skills load but the tools don't, and
+  the configure skill now says so instead of walking through credentials.
+
 ## [0.3.3] — 2026-10-21
 
 ### Changed
