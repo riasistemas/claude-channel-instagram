@@ -1,10 +1,12 @@
-# Instagram
+# Instagram channel (local)
 
-Connect an Instagram Business account to your Claude Code via the official Instagram Graph API. Inbound comments and DMs arrive as MCP channel notifications; replies post back through the Graph API.
+`instagram-local` connects an Instagram professional account to Claude Code through your own Meta app and the official Instagram API. Inbound comments and DMs arrive as MCP channel notifications; replies post back through the Graph API.
 
 The MCP server runs an HTTP webhook receiver with HMAC-SHA256 signature validation and exposes five tools to the assistant: `reply_comment`, `list_comments`, `send_private_reply`, `send_dm`, and `chat_messages`. **No Instagram Web reverse-engineering, no scraping** — uses Meta's official Graph API end-to-end.
 
-> **Where it runs**: Claude Code and Cowork. The MCP server is a local process that receives Meta's webhooks, so on claude.ai (web, desktop chat, mobile) the skills load but the Instagram tools are not available. Setup options: [claude-plugins.riasistemas.com.br/instagram](https://claude-plugins.riasistemas.com.br/instagram).
+> **Where it runs**: Claude Code. The MCP server is a local process that receives Meta's webhooks through a tunnel, with a Meta app you own. If you don't want to run a Meta app, use the `instagram` plugin from the [Claude directory](https://claude.ai/directory) instead; it works on every Claude surface.
+>
+> This is the `local` branch of [claude-channel-instagram](https://github.com/riasistemas/claude-channel-instagram). Until v0.3.5 it shipped as the `instagram` plugin; from v0.4.0 the local channel is this separate plugin.
 
 ## Prerequisites
 
@@ -41,19 +43,15 @@ openssl rand -hex 32
 
 ```
 /plugin marketplace add riasistemas/claude-plugins
-/plugin install instagram@riasistemas
+/plugin install instagram-local@riasistemas
 /reload-plugins
 ```
 
-Or install it from the [Claude plugin directory](https://claude.ai/directory) — it syncs to Claude Code as `instagram@anthropic-plugin-directory`.
-
 **3. Save credentials.**
 
-```
-/instagram:configure INSTAGRAM_ACCESS_TOKEN=<token> INSTAGRAM_BUSINESS_ACCOUNT_ID=<id> INSTAGRAM_VERIFY_TOKEN=<random> INSTAGRAM_APP_SECRET=<secret>
-```
+When you enable the plugin, Claude Code asks for the access token, account ID, verify token and app secret (plus two optional fields). The token and secrets go to your system keychain. To change them later, open `/plugin`, pick `instagram-local` and configure it.
 
-Writes to `~/.claude/channels/instagram/.env` (mode 600).
+Installs set up before v0.4.0 keep working: the server still reads `~/.claude/channels/instagram/.env` (written by `/instagram-local:configure KEY=VALUE`) for any value the options leave empty.
 
 **4. Expose the local webhook over HTTPS.**
 
@@ -79,17 +77,15 @@ Click **Verify and save**, then subscribe to the **`comments`** field.
 **6. Relaunch Claude Code with the channel flag.**
 
 ```sh
-claude --channels plugin:instagram@riasistemas
+claude --channels plugin:instagram-local@riasistemas
 ```
-
-If you installed from the directory, use `plugin:instagram@anthropic-plugin-directory`.
 
 **7. Allow accounts.**
 
 Default `policy` is `allowlist` — comments from unknown usernames are dropped silently. Add the usernames that should reach you:
 
 ```
-/instagram:access allow <username>
+/instagram-local:access allow <username>
 ```
 
 `<username>` is the Instagram handle without `@` (e.g. `briefing.juridico`). When that account comments on one of your posts, the comment reaches your Claude Code session.
@@ -152,7 +148,7 @@ Quick reference: usernames stored without `@`. Default policy is `allowlist`. Se
 
 - **HTTPS required**: Meta delivers webhooks only to valid HTTPS URLs. Localhost direct doesn't work — use a tunnel.
 - **Development Mode filter**: while your Meta App is in Development Mode, Instagram only delivers webhook events for users who have a role on the app (Admin / Developer / Tester). Users outside the role list have their comments silently filtered by Meta. To receive comments from any user, your app must be in Live Mode (which requires App Review for `instagram_manage_comments`).
-- **Comment-only**: this plugin does not handle DMs, mentions on Stories, or Live comments. The `messages` and `live_comments` webhook fields are ignored if subscribed.
+- **Not covered**: Story mentions and Live comments. The `live_comments` webhook field is ignored if subscribed.
 - **One plugin instance per machine**: the plugin uses a PID lock at `~/.claude/channels/instagram/plugin.pid` to kill stale instances.
 
 ## Privacy

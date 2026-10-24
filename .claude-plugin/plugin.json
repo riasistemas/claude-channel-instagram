@@ -1,13 +1,14 @@
 {
-  "name": "instagram",
-  "description": "Instagram channel for Claude Code — read and reply to comments AND direct messages via the official Instagram Graph API. Built-in comment-to-DM bootstrap, audio transcription, and access control via /instagram:access.",
-  "version": "0.3.5",
+  "name": "instagram-local",
+  "displayName": "Instagram channel (local)",
+  "description": "Instagram channel for Claude Code that runs on your machine with your own Meta app — read and reply to comments and direct messages via the official Instagram API, with comment-to-DM, audio transcription and access control via /instagram-local:access.",
+  "version": "0.4.0",
   "author": {
     "name": "RIA Systems",
     "email": "suporte@riasistemas.com.br",
-    "url": "https://claude-plugins.riasistemas.com.br"
+    "url": "https://github.com/riasistemas"
   },
-  "homepage": "https://claude-plugins.riasistemas.com.br/instagram",
+  "homepage": "https://github.com/riasistemas/claude-channel-instagram/tree/local#readme",
   "repository": "https://github.com/riasistemas/claude-channel-instagram",
   "license": "Apache-2.0",
   "keywords": [
@@ -16,5 +17,47 @@
     "channel",
     "dm",
     "mcp"
+  ],
+  "channels": [
+    {
+      "server": "instagram",
+      "displayName": "Instagram",
+      "userConfig": {
+        "access_token": {
+          "type": "string",
+          "title": "Instagram access token",
+          "description": "Long-lived token that can read and reply to comments and messages (permissions listed in the README)",
+          "sensitive": true
+        },
+        "business_account_id": {
+          "type": "string",
+          "title": "Instagram account ID",
+          "description": "ID of the Instagram professional account the token belongs to"
+        },
+        "verify_token": {
+          "type": "string",
+          "title": "Webhook verify token",
+          "description": "Random string you choose; paste the same value into the webhook settings of your Meta app",
+          "sensitive": true
+        },
+        "app_secret": {
+          "type": "string",
+          "title": "Meta app secret",
+          "description": "Used to check the HMAC-SHA256 signature of each webhook",
+          "sensitive": true
+        },
+        "public_base": {
+          "type": "string",
+          "title": "Public tunnel URL (optional)",
+          "description": "HTTPS URL of the tunnel that reaches this machine, needed to send images and audio in DMs"
+        },
+        "groq_api_key": {
+          "type": "string",
+          "title": "Groq API key (optional)",
+          "description": "Transcribes inbound audio with Groq Whisper; leave empty to skip transcription",
+          "sensitive": true
+        }
+      }
+    }
   ]
 }

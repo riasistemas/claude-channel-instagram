@@ -100,7 +100,7 @@ mkdir -p ~/my-instagram-extensions
 cd ~/my-instagram-extensions
 npm init -y
 # ... write index.ts implementing the interface above ...
-INSTAGRAM_EXTENSIONS_DIR=~/my-instagram-extensions  claude --channels plugin:instagram@riasistemas
+INSTAGRAM_EXTENSIONS_DIR=~/my-instagram-extensions  claude --channels plugin:instagram-local@riasistemas
 ```
 
 ## Safety

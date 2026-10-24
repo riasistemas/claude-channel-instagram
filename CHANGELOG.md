@@ -4,6 +4,22 @@ All notable changes to this plugin are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.4.0-local] — 2026-10-24
+
+### Changed
+
+- The local channel is now its own plugin, `instagram-local`, served from
+  the `local` branch through the `riasistemas/claude-plugins` catalog
+  (`/plugin install instagram-local@riasistemas`). The `instagram` plugin in
+  the Claude directory no longer runs a local server.
+- Credentials are plugin options: Claude Code asks for them when the plugin
+  is enabled and keeps the token and secrets in the system keychain. The
+  server still reads `~/.claude/channels/instagram/.env` for any option left
+  empty, so existing installs keep working.
+- Skills, tools and the channel source are namespaced `instagram-local`
+  (`/instagram-local:configure`, `/instagram-local:access`,
+  `plugin:instagram-local@riasistemas`).
+
 ## [0.3.5] — 2026-10-21
 
 ### Added

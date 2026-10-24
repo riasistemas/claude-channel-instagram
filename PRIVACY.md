@@ -1,8 +1,8 @@
 # Privacy Policy
 
-Last updated: 2026-04-26
+Last updated: 2026-10-24
 
-This privacy policy describes how the **`instagram` plugin for Claude Code** (the "plugin") handles data. It applies to anyone who installs and uses the plugin.
+This privacy policy describes how the **`instagram-local` plugin for Claude Code** (the "plugin") handles data. It applies to anyone who installs and uses the plugin.
 
 The plugin is open-source software distributed under Apache-2.0 and maintained by RIA Systems. The maintainer does **not** operate any backend that the plugin connects to. All data flow is between the user's own machine, the user's own Instagram Business account, and Meta Platforms, Inc.
 
@@ -22,7 +22,7 @@ The plugin reads and writes the following on the user's machine:
 | --- | --- | --- |
 | Comment history (inbound + replies) | `~/.claude/channels/instagram/messages.db` (SQLite) | Lets the `chat_messages` tool surface recent context to the assistant |
 | Allowlist, policy, media whitelist, mention patterns | `~/.claude/channels/instagram/access.json` | Access control state |
-| Graph API credentials | `~/.claude/channels/instagram/.env` (mode 600) | Required to talk to the Instagram Graph API |
+| Graph API credentials | The plugin's options in Claude Code (token and secrets in the system keychain), or `~/.claude/channels/instagram/.env` (mode 600) for installs set up before v0.4.0 | Required to talk to the Instagram Graph API |
 | PID lock and operational logs | `~/.claude/channels/instagram/plugin.pid`, `plugin.log` | Lifecycle management |
 
 The state directory can be moved with the `INSTAGRAM_STATE_DIR` environment variable. None of this data ever leaves the user's machine through any path controlled by the plugin maintainer.
@@ -56,7 +56,7 @@ Because all plugin data lives on the user's local machine, the user is in full c
 - **Access**: open `~/.claude/channels/instagram/messages.db` with any SQLite client.
 - **Export**: copy the state directory.
 - **Delete**: remove the state directory (`rm -rf ~/.claude/channels/instagram/`). The plugin recreates an empty state on next start.
-- **Rectification**: edit `access.json` directly or use the `/instagram:access` skill.
+- **Rectification**: edit `access.json` directly or use the `/instagram-local:access` skill.
 
 For data held by Meta (the comments themselves, account metadata, etc.), refer to [Meta's Privacy Policy](https://privacycenter.instagram.com/policy) and the rights it grants under applicable law.
 

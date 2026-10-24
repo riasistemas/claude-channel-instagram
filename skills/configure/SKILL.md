@@ -10,10 +10,14 @@ allowed-tools:
   - Bash(chmod *)
 ---
 
-# /instagram:configure — Instagram Channel Setup
+# /instagram-local:configure — Instagram Channel Setup
 
-Writes Instagram Graph API credentials to `~/.claude/channels/instagram/.env`
-and orients the user on access policy. The server reads `.env` once at boot.
+Checks the channel's credentials and access policy. The preferred place for
+credentials is the plugin's options: Claude Code asks for them when the
+plugin is enabled, stores the token and secrets in the system keychain, and
+the user can change them later from `/plugin`. This skill can also write them
+to `~/.claude/channels/instagram/.env`, which the server reads at boot as a
+fallback; options set in `/plugin` win over the file.
 
 Arguments passed: `$ARGUMENTS`
 
@@ -52,7 +56,10 @@ Read state files and give the user a complete picture:
 
 1. **Credentials** — check `~/.claude/channels/instagram/.env`. For each
    required key, show set/not-set; if set, mask everything except the
-   first 6 and last 4 chars.
+   first 6 and last 4 chars. Values saved in the plugin's options aren't
+   readable from here: if the file is missing a key, say it may already be
+   set in `/plugin` and that the server's boot error names any key still
+   missing.
 
 2. **Access** — read `~/.claude/channels/instagram/access.json` (missing
    file = defaults: `policy: "allowlist"`, empty allowFrom). Show:
@@ -62,13 +69,13 @@ Read state files and give the user a complete picture:
    - Mention patterns: count
 
 3. **What next** — end with a concrete next step:
-   - Missing required env vars → list them and tell the user *"Run
-     `/instagram:configure <key>=<value>` for each, or paste a `.env`
-     block."*
+   - Missing required env vars → list them and tell the user to fill them
+     in the plugin's options (`/plugin` → instagram-local → configure), or
+     to run `/instagram-local:configure <key>=<value>` for each.
    - All env vars set, no allowed usernames → *"Configure your webhook
      URL in the Meta App Dashboard pointing to a public tunnel
      (cloudflared/ngrok) of `http://localhost:<INSTAGRAM_PORT>/webhook`,
-     then add allowed contacts with `/instagram:access allow <username>`
+     then add allowed contacts with `/instagram-local:access allow <username>`
      (no `@`)."*
    - Token + at least one allowed username → *"Ready. Comments from those
      usernames on your Instagram posts will reach the assistant."*
@@ -80,13 +87,11 @@ and DMs inside Meta's 24h window (`send_dm`). DMs and comment-to-DM need
 `instagram_manage_messages` on the token.
 
 **Where it runs**: the channel is a local MCP server that receives Meta's
-webhooks, so it works in Claude Code and Cowork only. If the Instagram
-tools (`reply_comment`, `send_dm`, …) aren't available in this session —
-for example on claude.ai web, desktop chat or mobile — say so plainly and
-point the user to Claude Code or Cowork instead of walking them through
-credentials. For setup options, link the plugin's homepage:
-https://claude-plugins.riasistemas.com.br/instagram?src=plugin (English:
-https://claude-plugins.riasistemas.com.br/en/instagram?src=plugin).
+webhooks through a tunnel, with the user's own Meta app, so it runs in
+Claude Code. If the Instagram tools (`reply_comment`, `send_dm`, …) aren't
+available in this session, say so plainly instead of walking the user
+through credentials, and point them to the `instagram` plugin in the Claude
+directory, which works on every Claude surface without a Meta app.
 
 ### `<key>=<value>` — save one credential
 
@@ -118,7 +123,7 @@ other unrelated keys are in the file).
 - The server reads `.env` once at boot. Credential changes require a
   session restart or `/reload-plugins`. Say so after saving.
 - `access.json` is re-read on every inbound comment — policy changes via
-  `/instagram:access` take effect immediately, no restart.
+  `/instagram-local:access` take effect immediately, no restart.
 - Never log full token values. Always mask in output.
 - The webhook URL configured in Meta must point to a publicly reachable
   HTTPS endpoint (cloudflared, ngrok, or similar tunnel). The server

@@ -1,6 +1,6 @@
 # Instagram Plugin — Full Setup Walkthrough
 
-Step-by-step guide to get the plugin receiving Instagram comments and DMs end-to-end. Complements the [`/instagram:configure`](skills/configure/SKILL.md) skill with the missing operational steps (tunnel, webhook registration, owner / permission flow, gotchas) that bite first-time users.
+Step-by-step guide to get the plugin receiving Instagram comments and DMs end-to-end. Complements the [`/instagram-local:configure`](skills/configure/SKILL.md) skill with the missing operational steps (tunnel, webhook registration, owner / permission flow, gotchas) that bite first-time users.
 
 ---
 
@@ -20,7 +20,7 @@ Step-by-step guide to get the plugin receiving Instagram comments and DMs end-to
 # 1. Install plugin via Claude plugins catalog (or clone source)
 # 2. Generate Meta credentials (see "Credentials" below)
 # 3. Save them with the configure skill:
-/instagram:configure INSTAGRAM_ACCESS_TOKEN=IGAAN... INSTAGRAM_BUSINESS_ACCOUNT_ID=178... INSTAGRAM_VERIFY_TOKEN=$(openssl rand -hex 32) INSTAGRAM_APP_SECRET=...
+/instagram-local:configure INSTAGRAM_ACCESS_TOKEN=IGAAN... INSTAGRAM_BUSINESS_ACCOUNT_ID=178... INSTAGRAM_VERIFY_TOKEN=$(openssl rand -hex 32) INSTAGRAM_APP_SECRET=...
 
 # 4. Start a public tunnel pointing at the plugin's port (default 3790):
 ngrok http 3790
@@ -50,7 +50,7 @@ Generate these in Meta Business Manager / App Dashboard:
 | `INSTAGRAM_VERIFY_TOKEN` | You choose. `openssl rand -hex 32` is enough. **Save this value** — you'll paste the exact same string into the Meta webhook config in step 5. |
 | `INSTAGRAM_APP_SECRET` | Meta App Dashboard → App Settings → Basic → App Secret. Used for HMAC-SHA256 signature verification on incoming webhooks. |
 
-Save them via the configure skill (`/instagram:configure KEY=VALUE`) which writes to `~/.claude/channels/instagram/.env` with `chmod 600`.
+Save them via the configure skill (`/instagram-local:configure KEY=VALUE`) which writes to `~/.claude/channels/instagram/.env` with `chmod 600`.
 
 ### 2. Start the tunnel
 
@@ -219,17 +219,17 @@ For headless / fully trusted setups where Claude should run tools without asking
 {
   "permissions": {
     "allow": [
-      "mcp__plugin_instagram_instagram__reply_comment",
-      "mcp__plugin_instagram_instagram__send_dm",
-      "mcp__plugin_instagram_instagram__send_private_reply",
-      "mcp__plugin_instagram_instagram__chat_messages",
-      "mcp__plugin_instagram_instagram__list_comments"
+      "mcp__plugin_instagram-local_instagram__reply_comment",
+      "mcp__plugin_instagram-local_instagram__send_dm",
+      "mcp__plugin_instagram-local_instagram__send_private_reply",
+      "mcp__plugin_instagram-local_instagram__chat_messages",
+      "mcp__plugin_instagram-local_instagram__list_comments"
     ]
   }
 }
 ```
 
-This skips the permission prompt entirely for those tools. Combine with the `/instagram:access` allowlist (which controls **who** can reach the assistant) for safety.
+This skips the permission prompt entirely for those tools. Combine with the `/instagram-local:access` allowlist (which controls **who** can reach the assistant) for safety.
 
 ### Option C — Custom `permissionRelay` (Slack, email, push, etc.)
 
@@ -348,13 +348,13 @@ If you install the plugin in a different organization and forget to override the
 
 ## Post-setup smoke test checklist
 
-- [ ] `/instagram:configure` shows all 4 required env vars set
+- [ ] `/instagram-local:configure` shows all 4 required env vars set
 - [ ] Tunnel is up and `curl https://<tunnel>/webhook?hub.challenge=...&hub.verify_token=...` returns the challenge
 - [ ] Meta webhook console shows the URL as **Verified**
 - [ ] `subscribed_apps` GET returns the IG Business account with subscribed fields
 - [ ] (If using Option 0) Patch applied to `server.ts` and no extensions with `permissionRelay` are loaded
 - [ ] (If using Option A) `WHATSAPP_PERMISSION_TARGET` is your real phone, not the upstream default baked into the reference extension
-- [ ] (If using Option B) `settings.json` allowlist covers all `mcp__plugin_instagram_instagram__*` tools you'll use
+- [ ] (If using Option B) `settings.json` allowlist covers all `mcp__plugin_instagram-local_instagram__*` tools you'll use
 - [ ] Test comment from allowed account triggers `>>> @username (comment): "..."` in plugin log
 - [ ] Reply with `reply_comment` and the reply appears on Instagram
 - [ ] (For DMs) Allowed user sends a DM, plugin logs `>>> @username (dm): "..."`
@@ -368,7 +368,7 @@ If all 10 boxes are checked, you're operational.
 ## See also
 
 - [`README.md`](README.md) — plugin overview
-- [`ACCESS.md`](ACCESS.md) — allowlist policy and `/instagram:access`
+- [`ACCESS.md`](ACCESS.md) — allowlist policy and `/instagram-local:access`
 - [`skills/configure/SKILL.md`](skills/configure/SKILL.md) — credential management skill
 - [`skills/access/SKILL.md`](skills/access/SKILL.md) — allowlist management skill
 - [`extensions/README.md`](extensions/README.md) — extension hooks contract (`permissionRelay`, `onInboundDm`, etc.)

@@ -2,7 +2,15 @@
   "mcpServers": {
     "instagram": {
       "command": "node",
-      "args": ["${CLAUDE_PLUGIN_ROOT}/dist/server.js"]
+      "args": ["${CLAUDE_PLUGIN_ROOT}/dist/server.js"],
+      "env": {
+        "INSTAGRAM_ACCESS_TOKEN": "${user_config.access_token}",
+        "INSTAGRAM_BUSINESS_ACCOUNT_ID": "${user_config.business_account_id}",
+        "INSTAGRAM_VERIFY_TOKEN": "${user_config.verify_token}",
+        "INSTAGRAM_APP_SECRET": "${user_config.app_secret}",
+        "INSTAGRAM_PUBLIC_BASE": "${user_config.public_base}",
+        "GROQ_API_KEY": "${user_config.groq_api_key}"
+      }
     }
   }
 }
