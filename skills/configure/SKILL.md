@@ -1,129 +1,60 @@
 ---
 name: configure
-description: Set up the Instagram channel — save Graph API credentials and review access policy. Use when the user pastes an Instagram access token, asks to configure Instagram, asks "how do I set this up" or "who can reach me," or wants to check channel status.
+description: Explains what the Instagram plugin does on each Claude app and the options to connect an Instagram account. Use when the user asks to set up, connect or configure Instagram, pastes an Instagram or Meta access token or app secret, asks why Claude can't read or send their DMs, or asks about the connected version.
 user-invocable: true
-allowed-tools:
-  - Read
-  - Write
-  - Bash(ls *)
-  - Bash(mkdir *)
-  - Bash(chmod *)
 ---
 
-# /instagram:configure — Instagram Channel Setup
+# /instagram:configure — what this plugin does and how to connect
 
-Writes Instagram Graph API credentials to `~/.claude/channels/instagram/.env`
-and orients the user on access policy. The server reads `.env` once at boot.
+This plugin has nothing to configure: it runs no server and stores no
+credentials. This skill tells the user what works today and what their
+options are. Answer in the user's language.
 
 Arguments passed: `$ARGUMENTS`
 
----
+## If the user pasted a credential
 
-## Required env vars
+If `$ARGUMENTS` or the message holds something that looks like an access
+token, an app secret, a password or a login code:
 
-The server fails fast if any of these are missing:
+- Don't save it, repeat it or use it.
+- Tell them that anyone who sees the conversation can read it, and suggest
+  revoking it in Meta (for example, removing the app under Instagram →
+  Settings → Website permissions → Apps and websites, or revoking the
+  system user's tokens in Meta Business Settings).
+- Then give the status below.
 
-| Var | What it is | Where to find it |
-|---|---|---|
-| `INSTAGRAM_ACCESS_TOKEN` | Long-lived token with `instagram_basic` + `instagram_manage_comments` + `instagram_manage_messages` | Business Manager → System Users → Generate Token |
-| `INSTAGRAM_BUSINESS_ACCOUNT_ID` | The Instagram Business account ID | Meta App Dashboard → Instagram Graph API → API Setup |
-| `INSTAGRAM_VERIFY_TOKEN` | Random string you choose; same value goes into Meta's webhook config | Pick one (e.g. `openssl rand -hex 32`) |
-| `INSTAGRAM_APP_SECRET` | Meta App Secret used for HMAC-SHA256 signature verification | Meta App Dashboard → App Settings → Basic |
+## Status (default)
 
-Optional:
+Keep it to five to eight lines:
 
-| Var | Default | Purpose |
-|---|---|---|
-| `INSTAGRAM_PORT` | `3790` | Local HTTP port for the webhook receiver |
-| `INSTAGRAM_API_BASE` | `https://graph.instagram.com/v24.0` | Override to `https://graph.facebook.com/v24.0` if your token is from the older Facebook Login → Page flow |
-| `INSTAGRAM_TIMEZONE` | `UTC` | IANA timezone for `local_time` in notifications |
-| `INSTAGRAM_STATE_DIR` | `~/.claude/channels/instagram` | Override the state directory |
-| `INSTAGRAM_EXTENSIONS_DIR` | (empty) | Path to a directory exporting an extensions module (CRM enrichment, etc.) |
+1. **Works now on claude.ai, the desktop and mobile apps, Cowork and Claude
+   Code**: `/instagram:inbox`. The user pastes a DM or comment, as text or a
+   screenshot, and gets a reply ready to send, a short read of the lead and
+   a next step. Nothing is sent and no Instagram login is needed.
+2. **Claude reading and answering DMs by itself**: not part of this plugin
+   today. RIA Systems is building a connected version where the user signs
+   in with Instagram, with no Meta app or token. If they want to know when
+   it opens, share the waitlist:
+   https://claude-plugins.riasistemas.com.br/en/instagram?src=plugin-configure#cloud
+   (Portuguese:
+   https://claude-plugins.riasistemas.com.br/instagram?src=plugin-configure#cloud).
+   Don't promise dates, prices or features beyond this.
+3. **Developers with their own Meta app**: mention only if the user asks
+   about a local or self-hosted setup, webhooks, or the tools this plugin
+   had before v0.4.0. The local channel is now a separate plugin for Claude
+   Code, `instagram-local`:
 
----
+   ```
+   /plugin marketplace add riasistemas/claude-plugins
+   /plugin install instagram-local@riasistemas
+   ```
 
-## Dispatch on arguments
+   It needs their own Meta app and an HTTPS tunnel for webhooks, and it
+   still reads the credentials saved in `~/.claude/channels/instagram/.env`
+   by earlier versions.
 
-Parse `$ARGUMENTS` (whitespace-separated). If empty or unrecognized, show status.
+## Tone
 
-### No args — status and guidance
-
-Read state files and give the user a complete picture:
-
-1. **Credentials** — check `~/.claude/channels/instagram/.env`. For each
-   required key, show set/not-set; if set, mask everything except the
-   first 6 and last 4 chars.
-
-2. **Access** — read `~/.claude/channels/instagram/access.json` (missing
-   file = defaults: `policy: "allowlist"`, empty allowFrom). Show:
-   - Policy and what it means in one line
-   - Allowed usernames: count, list
-   - Media whitelist: count (empty = all)
-   - Mention patterns: count
-
-3. **What next** — end with a concrete next step:
-   - Missing required env vars → list them and tell the user *"Run
-     `/instagram:configure <key>=<value>` for each, or paste a `.env`
-     block."*
-   - All env vars set, no allowed usernames → *"Configure your webhook
-     URL in the Meta App Dashboard pointing to a public tunnel
-     (cloudflared/ngrok) of `http://localhost:<INSTAGRAM_PORT>/webhook`,
-     then add allowed contacts with `/instagram:access allow <username>`
-     (no `@`)."*
-   - Token + at least one allowed username → *"Ready. Comments from those
-     usernames on your Instagram posts will reach the assistant."*
-
-**What the channel covers**: inbound comments and DMs. Replies go out as
-public comment replies (`reply_comment`), a private reply that opens a DM
-with a commenter (`send_private_reply`, once per comment, within 7 days),
-and DMs inside Meta's 24h window (`send_dm`). DMs and comment-to-DM need
-`instagram_manage_messages` on the token.
-
-**Where it runs**: the channel is a local MCP server that receives Meta's
-webhooks, so it works in Claude Code and Cowork only. If the Instagram
-tools (`reply_comment`, `send_dm`, …) aren't available in this session —
-for example on claude.ai web, desktop chat or mobile — say so plainly and
-point the user to Claude Code or Cowork instead of walking them through
-credentials. For setup options, link the plugin's homepage:
-https://claude-plugins.riasistemas.com.br/instagram?src=plugin (English:
-https://claude-plugins.riasistemas.com.br/en/instagram?src=plugin).
-
-### `<key>=<value>` — save one credential
-
-1. Treat each whitespace-separated arg matching `KEY=VALUE` as a credential
-   to save. Trim whitespace and surrounding quotes from the value.
-2. Validate `KEY` is one of the recognized vars (see tables above). Reject
-   unknown keys with a list of accepted names.
-3. `mkdir -p ~/.claude/channels/instagram`
-4. Read existing `.env` if present. Update or insert each `KEY=VALUE` line,
-   preserving other keys. Write back, no quotes around values.
-5. `chmod 600 ~/.claude/channels/instagram/.env` — these are credentials.
-6. Confirm what was set (mask values), then show no-args status.
-
-### Multi-line paste — bulk save
-
-If `$ARGUMENTS` contains multiple `KEY=VALUE` pairs, save each in one pass.
-
-### `clear` — remove all credentials
-
-Delete `~/.claude/channels/instagram/.env` (or all `INSTAGRAM_*` lines if
-other unrelated keys are in the file).
-
----
-
-## Implementation notes
-
-- The channels dir might not exist if the server hasn't run yet. Missing
-  file = not configured, not an error.
-- The server reads `.env` once at boot. Credential changes require a
-  session restart or `/reload-plugins`. Say so after saving.
-- `access.json` is re-read on every inbound comment — policy changes via
-  `/instagram:access` take effect immediately, no restart.
-- Never log full token values. Always mask in output.
-- The webhook URL configured in Meta must point to a publicly reachable
-  HTTPS endpoint (cloudflared, ngrok, or similar tunnel). The server
-  itself binds to localhost on `INSTAGRAM_PORT`.
-- Meta Apps in **Development Mode** only deliver webhook events for users
-  with a role on the app (Admin / Developer / Tester). Going Live
-  requires App Review for `instagram_manage_comments` and
-  `instagram_manage_messages`.
+Plain and short. This is help text, not a pitch: mention the connected
+version once, as an option.
