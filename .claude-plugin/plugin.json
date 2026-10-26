@@ -1,20 +1,23 @@
 {
   "name": "instagram",
-  "description": "Instagram channel for Claude Code — read and reply to comments AND direct messages via the official Instagram Graph API. Built-in comment-to-DM bootstrap, audio transcription, and access control via /instagram:access.",
-  "version": "0.3.5",
+  "description": "Answer Instagram DMs and comments faster: paste a conversation or a screenshot and get a reply drafted in your voice, a quick read of the lead and a suggested next step. Nothing is sent on your behalf.",
+  "version": "0.4.0",
   "author": {
     "name": "RIA Systems",
     "email": "suporte@riasistemas.com.br",
     "url": "https://claude-plugins.riasistemas.com.br"
   },
-  "homepage": "https://claude-plugins.riasistemas.com.br/instagram",
+  "homepage": "https://claude-plugins.riasistemas.com.br/en/instagram",
   "repository": "https://github.com/riasistemas/claude-channel-instagram",
   "license": "Apache-2.0",
   "keywords": [
     "instagram",
-    "messaging",
-    "channel",
     "dm",
-    "mcp"
-  ]
+    "comments",
+    "replies",
+    "leads"
+  ],
+  "documentationUrl": "https://github.com/riasistemas/claude-channel-instagram#readme",
+  "supportUrl": "https://github.com/riasistemas/claude-channel-instagram/issues",
+  "privacyPolicyUrl": "https://github.com/riasistemas/claude-channel-instagram/blob/main/PRIVACY.md"
 }
