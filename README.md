@@ -1,27 +1,30 @@
 # Instagram
 
-A Claude plugin that helps you answer Instagram DMs and comments. Paste a
-conversation or a screenshot and Claude drafts the reply in your voice, reads
-where the lead stands and suggests the next step. You send the reply yourself.
+A Claude plugin that helps you answer Instagram DMs and comments. Sign in
+with Instagram and Claude lists who is waiting for an answer, reads the
+conversation, drafts the reply in your voice and sends it once you approve.
+Without signing in, paste a conversation or a screenshot and Claude drafts
+the reply for you to send.
 
 Works on claude.ai, the Claude desktop and mobile apps, Cowork and Claude
-Code. No Instagram login, no Meta app, no tokens.
+Code. You need an Instagram professional account (Business or Creator) to
+connect; no Meta app, token or tunnel.
 
 ## Skills
 
 | Skill | What it does |
 | --- | --- |
-| `/instagram:inbox` | Drafts a reply to a DM or comment you paste (text or screenshot), with a short lead read and a next step. Claude also uses it on its own when you paste an Instagram conversation. |
-| `/instagram:configure` | Explains what the plugin does on each Claude app and the options to connect an account. |
+| `/instagram:inbox` | Lists DMs and comments waiting for an answer, drafts replies with a short lead read and a next step, and sends the ones you approve. Without the connector, drafts a reply to a DM or comment you paste (text or screenshot). |
+| `/instagram:configure` | Shows whether Instagram is connected and how to connect or disconnect it. |
 
 Example:
 
-> **You:** /instagram:inbox *(screenshot of a DM: "hi! how much is the
-> 3-month plan? does it include the app?")*
+> **You:** /instagram:inbox who's waiting for an answer?
 >
-> **Claude:** a two-sentence reply with a `[price]` placeholder and one
-> qualifying question, then: *Lead: warm, asking about price, goal unknown.
-> Next step: answer, then offer a 10-minute call.*
+> **Claude:** three DMs inside the 24-hour window, the oldest a question
+> about the 3-month plan. A two-sentence reply with a `[price]` placeholder
+> for you to fill in, then: *Lead: warm, asking about price, goal unknown.
+> Next step: answer, then offer a 10-minute call.* Send it?
 
 ## Install
 
@@ -36,12 +39,44 @@ In Claude Code you can also install it from RIA Systems' catalog:
 /plugin install instagram@riasistemas
 ```
 
-## Connected version
+## Connect Instagram
 
-This plugin doesn't read or send DMs by itself. RIA Systems is building a
-connected version where you sign in with Instagram and Claude reads and
-answers your DMs. To hear when it opens, join the
-[waitlist](https://claude-plugins.riasistemas.com.br/en/instagram#cloud).
+- **claude.ai, desktop, mobile and Cowork:** open the plugin in Claude's
+  plugin settings, go to its **Connectors** tab and select **Connect**. On
+  Team and Enterprise plans an Owner adds the connector for the
+  organization first; each member connects their own account.
+- **Claude Code:** run `/mcp`, pick `plugin:instagram:instagram` and choose
+  **Authenticate**.
+
+Instagram's sign-in screen shows the app name "RIA Social", RIA Systems'
+Meta app. To disconnect, use Claude's connector or `/mcp` settings; to also
+remove the app's access on Instagram, go to Settings → Website permissions
+→ Apps and websites.
+
+## What the connector does
+
+The plugin declares one remote MCP server, `https://mcp.lia.im/instagram`,
+run by RIA Systems. It is the only network endpoint the plugin uses; the
+plugin runs nothing on your machine.
+
+| Tool | What it does |
+| --- | --- |
+| `get_account_status` | Connected account, granted permissions and which Claude apps have access |
+| `list_dm_conversations` | Recent DM conversations, newest first, with the 24-hour reply window |
+| `read_dm_conversation` | Up to the last 20 messages of one conversation (a Meta limit) |
+| `send_dm_reply` | One text reply to the customer who wrote last |
+| `list_recent_posts` | Your recent posts |
+| `list_post_comments` | Comments and replies on your posts |
+| `reply_to_comment` | One public reply to a comment |
+| `send_private_reply` | One DM to a person who commented (once per comment, within 7 days) |
+| `hide_comment` | Hides or unhides a comment on your post |
+
+The server reads DMs and comments from Meta's Instagram API when a tool
+runs and doesn't keep their content. It keeps your Instagram account ID,
+username, granted permissions and the Instagram access token, encrypted,
+so it can call Meta for you. Replies go out only within Meta's rules: 24
+hours after the customer's last message, up to 1000 bytes, text only, no
+links. The skills ask for your approval of the exact text before each send.
 
 ## Local channel for developers
 
@@ -60,8 +95,7 @@ keep working there.
 
 ## Privacy
 
-The plugin has no server, makes no network calls and stores nothing. See
-[PRIVACY.md](./PRIVACY.md).
+See [PRIVACY.md](./PRIVACY.md).
 
 ## License
 

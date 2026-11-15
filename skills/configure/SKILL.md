@@ -1,14 +1,14 @@
 ---
 name: configure
-description: Explains what the Instagram plugin does on each Claude app and the options to connect an Instagram account. Use when the user asks to set up, connect or configure Instagram, pastes an Instagram or Meta access token or app secret, asks why Claude can't read or send their DMs, or asks about the connected version.
+description: Explains how to connect an Instagram account to Claude through this plugin's connector, checks whether it is connected, and covers disconnecting. Use when the user asks to set up, connect, configure or disconnect Instagram, pastes an Instagram or Meta access token or app secret, or asks why Claude can't read or send their DMs.
 user-invocable: true
 ---
 
-# /instagram:configure — what this plugin does and how to connect
+# /instagram:configure — connect Instagram
 
-This plugin has nothing to configure: it runs no server and stores no
-credentials. This skill tells the user what works today and what their
-options are. Answer in the user's language.
+This plugin reaches Instagram through RIA Systems' connector at
+`https://mcp.lia.im/instagram`. The user signs in with Instagram; there is
+no Meta app, token or tunnel to set up. Answer in the user's language.
 
 Arguments passed: `$ARGUMENTS`
 
@@ -17,7 +17,7 @@ Arguments passed: `$ARGUMENTS`
 If `$ARGUMENTS` or the message holds something that looks like an access
 token, an app secret, a password or a login code:
 
-- Don't save it, repeat it or use it.
+- Don't save it, repeat it or use it. The connector never needs one.
 - Tell them that anyone who sees the conversation can read it, and suggest
   revoking it in Meta (for example, removing the app under Instagram →
   Settings → Website permissions → Apps and websites, or revoking the
@@ -26,35 +26,57 @@ token, an app secret, a password or a login code:
 
 ## Status (default)
 
-Keep it to five to eight lines:
+If the connector's `get_account_status` tool is available, call it and
+report in two or three lines: the connected username, the permissions
+(DMs, comments) and which Claude apps have access. Stop there unless
+something is missing.
 
-1. **Works now on claude.ai, the desktop and mobile apps, Cowork and Claude
-   Code**: `/instagram:inbox`. The user pastes a DM or comment, as text or a
-   screenshot, and gets a reply ready to send, a short read of the lead and
-   a next step. Nothing is sent and no Instagram login is needed.
-2. **Claude reading and answering DMs by itself**: not part of this plugin
-   today. RIA Systems is building a connected version where the user signs
-   in with Instagram, with no Meta app or token. If they want to know when
-   it opens, share the waitlist:
-   https://claude-plugins.riasistemas.com.br/en/instagram?src=plugin-configure#cloud
-   (Portuguese:
-   https://claude-plugins.riasistemas.com.br/instagram?src=plugin-configure#cloud).
-   Don't promise dates, prices or features beyond this.
-3. **Developers with their own Meta app**: mention only if the user asks
-   about a local or self-hosted setup, webhooks, or the tools this plugin
-   had before v0.4.0. The local channel is now a separate plugin for Claude
-   Code, `instagram-local`:
+If the tool isn't available, the connector isn't signed in yet. Explain in
+five to eight lines:
 
-   ```
-   /plugin marketplace add riasistemas/claude-plugins
-   /plugin install instagram-local@riasistemas
-   ```
+1. **What's needed:** an Instagram professional account (Business or
+   Creator). Meta doesn't open personal accounts to apps; the user can
+   switch for free in the Instagram app under Settings → Account type and
+   tools.
+2. **claude.ai, the desktop and mobile apps and Cowork:** open this plugin
+   in Claude's plugin settings, go to its **Connectors** tab and select
+   **Connect** next to Instagram. On Team and Enterprise plans an Owner adds
+   the connector for the organization first; each member then connects
+   their own account.
+3. **Claude Code:** run `/mcp`, pick `plugin:instagram:instagram` and choose
+   **Authenticate**.
+4. **Sign-in:** a RIA Systems page opens, then Instagram's own sign-in,
+   which shows the app name "RIA Social" (RIA Systems' Meta app). The user
+   approves access to messages and comments and comes back to Claude.
+5. **Afterwards:** `/instagram:inbox` lists who is waiting for an answer,
+   drafts replies and sends only what the user approves.
 
-   It needs their own Meta app and an HTTPS tunnel for webhooks, and it
-   still reads the credentials saved in `~/.claude/channels/instagram/.env`
-   by earlier versions.
+Don't promise dates, prices or features beyond this. If sign-in fails, ask
+what the screen said; an account already connected to a RIA Systems office
+panel can't be connected here too.
+
+## Disconnect
+
+Disconnect the connector in Claude's connector or `/mcp` settings. That
+revokes Claude's access on RIA Systems' side. To also remove RIA Social's
+access on Instagram, go to Instagram → Settings → Website permissions →
+Apps and websites.
+
+## Developers with their own Meta app
+
+Mention only if the user asks about a local or self-hosted setup or
+webhooks. The local channel is a separate plugin for Claude Code,
+`instagram-local`:
+
+```
+/plugin marketplace add riasistemas/claude-plugins
+/plugin install instagram-local@riasistemas
+```
+
+It needs their own Meta app and an HTTPS tunnel for webhooks, and it still
+reads the credentials saved in `~/.claude/channels/instagram/.env` by
+earlier versions.
 
 ## Tone
 
-Plain and short. This is help text, not a pitch: mention the connected
-version once, as an option.
+Plain and short. This is help text, not a pitch.
