@@ -20,6 +20,10 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   RIA Systems sign-in page (Add another Instagram account); every tool
   takes an `account` parameter, and `/instagram:inbox` asks which account
   to use and says which @ each reply goes out from.
+- **Kept conversations.** The sign-in page asks you to agree that RIA
+  Systems keeps the direct messages of the connected accounts (versioned
+  acceptance per account), so Lia's automatic replies can be turned on later
+  without asking again. Each action Claude takes is logged without its text.
 
 ### Changed
 

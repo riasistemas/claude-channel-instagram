@@ -1,6 +1,6 @@
 # Privacy Policy
 
-Last updated: 2026-11-15
+Last updated: 2026-11-16
 
 This policy describes how the **`instagram` plugin** (the "plugin") and the
 Instagram connector it uses (the "connector") handle data. It applies to
@@ -18,10 +18,11 @@ and the connector are maintained by RIA SYSTEMS LTDA ("RIA Systems").
 - If you don't connect Instagram, nothing leaves your Claude conversation:
   what you paste is processed by Anthropic under the terms and privacy
   policy of your Claude account.
-- If you connect Instagram, the connector keeps your account ID, username,
-  granted permissions and an encrypted Instagram access token, and reads
-  DMs and comments from Meta only when a tool runs. It doesn't store their
-  content.
+- If you connect Instagram, RIA Systems keeps your account ID, username,
+  granted permissions and an encrypted Instagram access token, plus the
+  direct messages of the connected accounts, which you agree to on the
+  connection screen. Comments are read from Meta only when a tool runs and
+  aren't stored.
 
 ## Without the connector
 
@@ -42,15 +43,36 @@ Meta app "RIA Social". You choose which permissions to grant.
   the connector, so it can call Meta on your behalf.
 - A record of each Claude app you authorized (when it connected and was
   last used), so you can see and revoke access.
+- When and in which version you accepted, for each connected account, that
+  its conversations are kept.
+- A log of each action Claude took on your behalf (DM sent, comment reply,
+  private reply, comment hidden): which account, which tool, when, and the
+  Instagram IDs involved. It doesn't include the text.
+- The direct messages of each connected account, received and sent,
+  including the sender's Instagram-scoped ID, as described below.
 - Short-lived technical data to enforce Meta's sending limits and avoid
   duplicate sends.
 
-**What it reads and doesn't keep**
+**Your conversations**
 
-DMs, comments, post captions and the names of the people who wrote them
-are fetched from Meta's Instagram API when a tool runs, passed to your
-Claude conversation and not stored by the connector. They are not written
-to the connector's logs.
+The connection screen tells you that RIA Systems keeps the direct messages
+of the connected accounts. Once you accept, Meta delivers each DM the
+account receives or sends (from Claude or from the Instagram app) to RIA
+Systems, which stores it in your RIA Systems account. It's used to show the
+history to Claude and, only if you later turn on Lia's automatic replies
+(a separate paid service), so that Lia can answer. Turning that on doesn't
+ask you to accept again; the replies themselves only start when you
+contract the service. Media files aren't downloaded: only the type of an
+attachment is kept.
+
+Comments, post captions and the names of the people who wrote them are
+fetched from Meta when a tool runs, passed to your Claude conversation and
+not stored. No message or comment content is written to logs.
+
+Conversations are kept while the account stays connected. [PENDING LEGAL
+REVIEW: retention period after an account is removed or disconnected.]
+You can ask for them to be deleted at any time at the privacy address
+below.
 
 **What it sends**
 
@@ -69,15 +91,18 @@ RIA Systems doesn't sell this data or use it for advertising.
 **Disconnecting and deletion**
 
 Disconnecting the connector in Claude's connector or `/mcp` settings revokes
-Claude's access. Removing "RIA Social" under Instagram → Settings → Website
-permissions → Apps and websites also revokes Meta's access. To have the
-stored data deleted, write to the privacy address below.
+Claude's access. Removing an account on the connection screen stops it
+from being used. Removing "RIA Social" under Instagram → Settings → Website
+permissions → Apps and websites also revokes Meta's access. To have the stored data
+deleted, including kept conversations, write to the privacy address below.
 
 ## Other people's data
 
 Instagram conversations and comments hold other people's personal data.
 Only connect an account you manage, and only paste what you're allowed to
-share. The skills ask Claude not to repeat more of it than a reply needs.
+share. For the conversations it keeps, RIA Systems processes your
+customers' data on your behalf; you remain responsible for having a legal
+basis to keep and answer them. The skills ask Claude not to repeat more of it than a reply needs.
 
 ## What else RIA Systems can see
 

@@ -74,10 +74,13 @@ plugin runs nothing on your machine.
 | `send_private_reply` | One DM to a person who commented (once per comment, within 7 days) |
 | `hide_comment` | Hides or unhides a comment on your post |
 
-The server reads DMs and comments from Meta's Instagram API when a tool
-runs and doesn't keep their content. It keeps your Instagram account ID,
-username, granted permissions and the Instagram access token, encrypted,
-so it can call Meta for you. Replies go out only within Meta's rules: 24
+It keeps your Instagram account ID, username, granted permissions and the
+Instagram access token, encrypted, so it can call Meta for you. When you
+connect, the sign-in page asks you to agree that RIA Systems keeps the
+direct messages of the connected accounts; that history is what Lia's
+automatic replies (a separate service) would use if you turn them on later.
+Comments are read from Meta when a tool runs and aren't kept. Each send is
+logged without its text. Details in [PRIVACY.md](PRIVACY.md). Replies go out only within Meta's rules: 24
 hours after the customer's last message, up to 1000 bytes, text only, no
 links. The skills ask for your approval of the exact text before each send.
 
