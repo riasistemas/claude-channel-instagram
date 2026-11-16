@@ -48,7 +48,13 @@ five to eight lines:
 4. **Sign-in:** a RIA Systems page opens, then Instagram's own sign-in,
    which shows the app name "RIA Social" (RIA Systems' Meta app). The user
    approves access to messages and comments and comes back to Claude.
-5. **Afterwards:** `/instagram:inbox` lists who is waiting for an answer,
+5. **More than one account:** connect again (disconnect and reconnect in
+   Claude, or reconnect from `/mcp`). The RIA Systems page lists the
+   accounts already connected; **Add another Instagram account** asks
+   Instagram to sign in again so the user can log into the other account,
+   and the × next to an account removes it. All connected accounts work in
+   the same conversation.
+6. **Afterwards:** `/instagram:inbox` lists who is waiting for an answer,
    drafts replies and sends only what the user approves.
 
 Don't promise dates, prices or features beyond this. If sign-in fails, ask

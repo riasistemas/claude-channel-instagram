@@ -47,6 +47,9 @@ In Claude Code you can also install it from RIA Systems' catalog:
   organization first; each member connects their own account.
 - **Claude Code:** run `/mcp`, pick `plugin:instagram:instagram` and choose
   **Authenticate**.
+- **Several accounts:** connect again and choose **Add another Instagram
+  account** on the RIA Systems page. Every connected account is available
+  in the same conversation; tell Claude which @ to use.
 
 Instagram's sign-in screen shows the app name "RIA Social", RIA Systems'
 Meta app. To disconnect, use Claude's connector or `/mcp` settings; to also
@@ -61,7 +64,7 @@ plugin runs nothing on your machine.
 
 | Tool | What it does |
 | --- | --- |
-| `get_account_status` | Connected account, granted permissions and which Claude apps have access |
+| `get_account_status` | Connected accounts, granted permissions and which Claude apps have access |
 | `list_dm_conversations` | Recent DM conversations, newest first, with the 24-hour reply window |
 | `read_dm_conversation` | Up to the last 20 messages of one conversation (a Meta limit) |
 | `send_dm_reply` | One text reply to the customer who wrote last |

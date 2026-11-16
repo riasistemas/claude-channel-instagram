@@ -16,6 +16,10 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   `read_dm_conversation`, `send_dm_reply`, `list_recent_posts`,
   `list_post_comments`, `reply_to_comment`, `send_private_reply` and
   `hide_comment`.
+- **Several Instagram accounts.** Connect more than one account from the
+  RIA Systems sign-in page (Add another Instagram account); every tool
+  takes an `account` parameter, and `/instagram:inbox` asks which account
+  to use and says which @ each reply goes out from.
 
 ### Changed
 

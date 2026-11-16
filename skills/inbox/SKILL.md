@@ -32,6 +32,12 @@ Call `get_account_status` once per conversation. If it reports the account
 as unavailable or a permission as missing, say what is missing and point to
 `/instagram:configure`; don't retry in a loop.
 
+It lists every connected account. With more than one, ask which account the
+user means (or go through each when they ask for everything), pass
+`account` (the @username) on every tool call, and label each conversation
+with its account. If a tool answers `account_disconnected`, say which
+account needs reconnecting and keep working with the others.
+
 ## 2. Find what needs an answer (connected)
 
 - DMs: `list_dm_conversations` with `awaiting_reply_only: true`, unless the
@@ -83,7 +89,8 @@ After the draft, add two or three short lines:
 
 ## 5. Send only what the user approves (connected)
 
-- Show the exact text and where it goes (the person's username, and for a
+- Show the exact text and where it goes (the person's username, which of
+  your accounts it goes out from when more than one is connected, and for a
   comment whether the reply is public or private), and ask for an explicit
   yes. A request to "answer everyone" is not approval: confirm each message.
 - No placeholders left, no links, nothing the user didn't approve. If the
