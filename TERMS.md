@@ -31,21 +31,15 @@ Version 2026-11-21 · English · [Português](TERMS.pt.md) · [Español](TERMS.e
    [lia.im/privacidade](https://lia.im/privacidade),
    [lia.im/dpa](https://lia.im/dpa)). Nothing here requires you to
    subscribe to Lia or requires RIA to offer it.
-6. **Price, trial and availability.** You can use the connector free of
-   charge for 7 days from the first connection. After that it costs US$ 8
-   per month or, if you contract in Brazil, R$ 49.00 per month, charged in
-   advance to the card you provide through our payment processor. You can
-   cancel at any time in the settings; cancellation takes effect at the
-   end of the month already paid, with no further charge. If you are a
-   consumer, you may withdraw within 7 days of the first charge for a full
-   refund, or within any longer period your local law provides, with a
-   refund of the unused part. RIA may change the price with 30 days'
-   notice, effective from the following month. The connector is offered
-   "as is", with no guarantee of continuous availability; it depends on
-   Meta and Anthropic, which RIA doesn't control. RIA may change, limit or
+6. **Free beta and availability.** During the launch period (beta), the
+   connector is offered free of charge. If RIA starts charging for it, it
+   will give at least 30 days' notice, and charges will only start for
+   those who accept the price and add a payment method; anyone who doesn't
+   accept can remove the account at no cost. The connector is offered "as
+   is", with no guarantee of continuous availability; it depends on Meta
+   and Anthropic, which RIA doesn't control. RIA may change, limit or
    discontinue the connector, with 30 days' notice when the change affects
-   your use, unless Meta, Anthropic or the law requires otherwise; if it
-   discontinues the connector, it refunds the unused part of the month.
+   your use, unless Meta, Anthropic or the law requires otherwise.
 7. **Liability.** RIA is liable for damage it causes through intent or
    fault in operating the connector, within the limits of the law. It
    isn't liable for acts of Meta or Anthropic, for content you approve

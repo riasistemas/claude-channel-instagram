@@ -32,22 +32,16 @@ Versão 2026-11-21 · [English](TERMS.md) · Português · [Español](TERMS.es.m
    [lia.im/privacidade](https://lia.im/privacidade),
    [lia.im/dpa](https://lia.im/dpa)). Nada aqui obriga você a contratar a
    Lia nem obriga a RIA a oferecê-la.
-6. **Preço, teste e disponibilidade.** O conector pode ser usado sem custo
-   por 7 dias a partir da primeira conexão. Depois, custa US$ 8 por mês
-   ou, para quem contrata no Brasil, R$ 49,00 por mês, cobrados
-   antecipadamente no cartão informado por meio do nosso processador de
-   pagamentos. Você cancela quando quiser nas configurações; o
-   cancelamento vale ao fim do mês já pago, sem nova cobrança. Se você for
-   consumidor, pode desistir em até 7 dias da primeira cobrança, com
-   devolução integral, ou no prazo maior que a lei do seu país garantir,
-   com devolução do que não tiver sido usado. A RIA pode alterar o preço
-   com aviso de 30 dias, valendo a partir do mês seguinte. O conector é
+6. **Beta sem custo e disponibilidade.** Durante o período de lançamento
+   (beta), o conector é oferecido sem custo. Se a RIA passar a cobrar por
+   ele, avisará com pelo menos 30 dias de antecedência, e a cobrança só
+   começará para quem aceitar o preço e cadastrar um meio de pagamento;
+   quem não aceitar poderá remover a conta, sem custo. O conector é
    oferecido "no estado em que se encontra", sem garantia de
    disponibilidade contínua; depende da Meta e da Anthropic, que a RIA não
    controla. A RIA pode alterar, limitar ou descontinuar o conector,
    avisando com 30 dias quando a mudança afetar o uso, salvo exigência da
-   Meta, da Anthropic ou da lei; se descontinuar, devolve a parte do mês
-   não usada.
+   Meta, da Anthropic ou da lei.
 7. **Responsabilidade.** A RIA responde pelos danos que causar por dolo ou
    culpa na operação do conector, nos limites da lei. Não responde por
    atos da Meta ou da Anthropic, por conteúdo que você aprovar enviar, por

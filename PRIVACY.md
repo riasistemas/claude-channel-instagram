@@ -119,8 +119,6 @@ hours after the customer's last message, up to 1000 bytes, text only.
   contractual clauses; transfers to RIA in Brazil from the EU/EEA rely on
   the European Commission's adequacy decision for Brazil (Implementing
   Decision (EU) 2026/179).
-- Our payment processor (Stripe), which receives your card and billing
-  details to charge the subscription; we don't store card numbers.
 
 RIA Systems doesn't sell this data, doesn't use it for advertising or
 prospecting, and doesn't use it to train AI models.

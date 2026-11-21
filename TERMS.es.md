@@ -31,22 +31,15 @@ Versión 2026-11-21 · [English](TERMS.md) · [Português](TERMS.pt.md) · Espa�
    [lia.im/privacidade](https://lia.im/privacidade),
    [lia.im/dpa](https://lia.im/dpa)). Nada aquí te obliga a contratar Lia
    ni obliga a RIA a ofrecerla.
-6. **Precio, prueba y disponibilidad.** Puedes usar el conector sin costo
-   durante 7 días desde la primera conexión. Después, cuesta US$ 8 al mes
-   o, si contratas en Brasil, R$ 49,00 al mes, cobrados por adelantado en la
-   tarjeta que informes mediante nuestro procesador de pagos. Puedes
-   cancelar cuando quieras en la configuración; la cancelación surte
-   efecto al final del mes ya pagado, sin nuevos cobros. Si eres
-   consumidor, puedes desistir dentro de los 7 días siguientes al primer
-   cobro, con reembolso total, o en el plazo mayor que garantice la ley de
-   tu país, con devolución de la parte no utilizada. RIA puede cambiar el
-   precio con 30 días de aviso, con efecto a partir del mes siguiente. El
-   conector se ofrece "tal cual", sin garantía de disponibilidad continua;
-   depende de Meta y de Anthropic, que RIA no controla. RIA puede
-   modificar, limitar o discontinuar el conector, avisando con 30 días
-   cuando el cambio afecte el uso, salvo que Meta, Anthropic o la ley
-   exijan otra cosa; si discontinúa el conector, reembolsa la parte no
-   usada del mes.
+6. **Beta sin costo y disponibilidad.** Durante el período de lanzamiento
+   (beta), el conector se ofrece sin costo. Si RIA empieza a cobrar por
+   él, avisará con al menos 30 días de antelación, y el cobro solo
+   comenzará para quien acepte el precio y registre un medio de pago;
+   quien no acepte podrá eliminar la cuenta, sin costo. El conector se
+   ofrece "tal cual", sin garantía de disponibilidad continua; depende de
+   Meta y de Anthropic, que RIA no controla. RIA puede modificar, limitar
+   o discontinuar el conector, avisando con 30 días cuando el cambio
+   afecte el uso, salvo que Meta, Anthropic o la ley exijan otra cosa.
 7. **Responsabilidad.** RIA responde por los daños que cause con dolo o
    culpa en la operación del conector, dentro de los límites de la ley. No
    responde por actos de Meta o de Anthropic, por contenido cuyo envío tú

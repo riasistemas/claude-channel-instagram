@@ -37,7 +37,8 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Connector terms and privacy policy in English, Portuguese and Spanish
   (`TERMS*.md`, `PRIVACY*.md`); the connection screen links the visitor's
   language and records the accepted version.
-- The connector is free for 7 days, then US$ 8 per month (R$ 49 in Brazil). Pasting a
+- The connector is free during the beta; any future price comes with 30 days'
+  notice and only applies to those who accept it. Pasting a
   conversation and the `instagram-local` plugin stay free.
 
 ## [0.4.0] — 2026-10-24

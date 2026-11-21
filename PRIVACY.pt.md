@@ -126,9 +126,6 @@ cliente, até 1000 bytes, só texto.
   oferecem as cláusulas contratuais padrão da UE; as transferências da
   UE/EEE para a RIA no Brasil se apoiam na decisão de adequação da
   Comissão Europeia para o Brasil (Decisão de Execução (UE) 2026/179).
-- Nosso processador de pagamentos (Stripe), que recebe os dados do seu
-  cartão e de cobrança para cobrar a assinatura; não guardamos números de
-  cartão.
 
 A RIA Systems não vende esses dados, não os usa para publicidade nem
 prospecção e não os usa para treinar modelos de IA.

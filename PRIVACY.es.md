@@ -132,9 +132,6 @@ mensaje del cliente, hasta 1000 bytes, solo texto.
   contractuales tipo de la UE; las transferencias desde la UE/EEE a RIA en
   Brasil se apoyan en la decisión de adecuación de la Comisión Europea
   para Brasil (Decisión de Ejecución (UE) 2026/179).
-- Nuestro procesador de pagos (Stripe), que recibe los datos de tu tarjeta
-  y de facturación para cobrar la suscripción; no guardamos números de
-  tarjeta.
 
 RIA Systems no vende estos datos, no los usa para publicidad ni
 prospección y no los usa para entrenar modelos de IA.
