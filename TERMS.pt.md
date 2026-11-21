@@ -36,12 +36,14 @@ Versão 2026-11-21 · [English](TERMS.md) · Português · [Español](TERMS.es.m
    (beta), o conector é oferecido sem custo. Se a RIA passar a cobrar por
    ele, avisará com pelo menos 30 dias de antecedência, e a cobrança só
    começará para quem aceitar o preço e cadastrar um meio de pagamento;
-   quem não aceitar poderá remover a conta, sem custo. O conector é
-   oferecido "no estado em que se encontra", sem garantia de
-   disponibilidade contínua; depende da Meta e da Anthropic, que a RIA não
-   controla. A RIA pode alterar, limitar ou descontinuar o conector,
-   avisando com 30 dias quando a mudança afetar o uso, salvo exigência da
-   Meta, da Anthropic ou da lei.
+   quem não aceitar até o fim do aviso pode continuar usando o conector
+   até essa data; depois, a conta é removida, sem custo, com a eliminação
+   dos dados conforme a Política de Privacidade. O conector é oferecido
+   "no estado em que se encontra", sem garantia de disponibilidade
+   contínua; depende da Meta e da Anthropic, que a RIA não controla. A RIA
+   pode alterar, limitar ou descontinuar o conector, avisando com 30 dias
+   quando a mudança afetar o uso, salvo exigência da Meta, da Anthropic ou
+   da lei.
 7. **Responsabilidade.** A RIA responde pelos danos que causar por dolo ou
    culpa na operação do conector, nos limites da lei. Não responde por
    atos da Meta ou da Anthropic, por conteúdo que você aprovar enviar, por

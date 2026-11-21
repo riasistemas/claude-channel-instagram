@@ -35,9 +35,11 @@ Version 2026-11-21 · English · [Português](TERMS.pt.md) · [Español](TERMS.e
    connector is offered free of charge. If RIA starts charging for it, it
    will give at least 30 days' notice, and charges will only start for
    those who accept the price and add a payment method; anyone who doesn't
-   accept can remove the account at no cost. The connector is offered "as
-   is", with no guarantee of continuous availability; it depends on Meta
-   and Anthropic, which RIA doesn't control. RIA may change, limit or
+   accept by the end of the notice period can keep using the connector
+   until that date; after it, the account is removed at no cost, with data
+   deleted as described in the Privacy Policy. The connector is offered
+   "as is", with no guarantee of continuous availability; it depends on
+   Meta and Anthropic, which RIA doesn't control. RIA may change, limit or
    discontinue the connector, with 30 days' notice when the change affects
    your use, unless Meta, Anthropic or the law requires otherwise.
 7. **Liability.** RIA is liable for damage it causes through intent or
