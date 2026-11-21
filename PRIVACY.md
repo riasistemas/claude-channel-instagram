@@ -175,7 +175,7 @@ reflects the latest one.
 
 ## Contact
 
-RIA SYSTEMS LTDA, CNPJ 50.936.395/0001-07, São Paulo, Brazil.
+RIA SYSTEMS LTDA, CNPJ 50.936.395/0001-07, Rua Cardeal Arcoverde, 2365, Conj. 33, Parte, Pinheiros, São Paulo/SP, CEP 05407-003, Brazil.
 
 - Privacy: privacidade@riasistemas.com.br. This address is our channel for
   data-protection requests (LGPD art. 41, § 2º).
