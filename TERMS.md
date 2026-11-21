@@ -57,6 +57,8 @@ Version 2026-11-21 · [English](#english) · [Português](#português) · [Espa�
     Contact: privacidade@riasistemas.com.br (personal data) and the
     plugin's [GitHub repository](https://github.com/riasistemas/claude-channel-instagram/issues)
     (support).
+11. **Languages.** These Terms are published in Portuguese, English and
+    Spanish; if the versions differ, the Portuguese version prevails.
 
 ## Português
 
@@ -113,6 +115,8 @@ Version 2026-11-21 · [English](#english) · [Português](#português) · [Espa�
     privacidade@riasistemas.com.br (dados pessoais) e o
     [repositório do plugin no GitHub](https://github.com/riasistemas/claude-channel-instagram/issues)
     (suporte).
+11. **Idiomas.** Estes Termos são publicados em português, inglês e
+    espanhol; em caso de divergência, prevalece a versão em português.
 
 ## Español
 
@@ -171,3 +175,5 @@ Version 2026-11-21 · [English](#english) · [Português](#português) · [Espa�
     Contacto: privacidade@riasistemas.com.br (datos personales) y el
     [repositorio del plugin en GitHub](https://github.com/riasistemas/claude-channel-instagram/issues)
     (soporte).
+11. **Idiomas.** Estos Términos se publican en portugués, inglés y
+    español; en caso de divergencia, prevalece la versión en portugués.
