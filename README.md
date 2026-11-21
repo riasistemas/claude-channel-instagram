@@ -15,7 +15,7 @@ connect; no Meta app, token or tunnel.
 | | Where | Price |
 | --- | --- | --- |
 | **Paste a conversation** | Everywhere, no sign-in | Free |
-| **Instagram connector** (`mcp.lia.im/instagram`) | claude.ai, desktop, mobile, Cowork and Claude Code | 7 days free, then US$ 8/month ([terms](TERMS.md)) |
+| **Instagram connector** (`mcp.lia.im/instagram`) | claude.ai, desktop, mobile, Cowork and Claude Code | 7 days free, then US$ 8/month, or R$ 49/month in Brazil ([terms](TERMS.md)) |
 | **Your own Meta app** ([`instagram-local`](#local-channel-for-developers)) | Claude Code and Cowork | Free; you create the Meta app and tokens |
 
 ## Skills

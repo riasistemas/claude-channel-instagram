@@ -33,7 +33,7 @@ Versión 2026-11-21 · [English](TERMS.md) · [Português](TERMS.pt.md) · Espa�
    ni obliga a RIA a ofrecerla.
 6. **Precio, prueba y disponibilidad.** Puedes usar el conector sin costo
    durante 7 días desde la primera conexión. Después, cuesta US$ 8 al mes
-   o, si contratas en Brasil, R$ [V] al mes, cobrados por adelantado en la
+   o, si contratas en Brasil, R$ 49,00 al mes, cobrados por adelantado en la
    tarjeta que informes mediante nuestro procesador de pagos. Puedes
    cancelar cuando quieras en la configuración; la cancelación surte
    efecto al final del mes ya pagado, sin nuevos cobros. Si eres
@@ -67,7 +67,7 @@ Versión 2026-11-21 · [English](TERMS.md) · [Português](TERMS.pt.md) · Espa�
    registrada.
 10. **Ley y jurisdicción.** Ley brasileña; tribunales de São Paulo/SP, sin
     perjuicio de los tribunales de tu domicilio si eres consumidor.
-    Contacto: privacidade@riasistemas.com.br (datos personales) y el
+    Contacto: suporte@riasistemas.com.br (datos personales) y el
     [repositorio del plugin en
     GitHub](https://github.com/riasistemas/claude-channel-instagram/issues)
     (soporte).

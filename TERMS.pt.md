@@ -34,7 +34,7 @@ Versão 2026-11-21 · [English](TERMS.md) · Português · [Español](TERMS.es.m
    Lia nem obriga a RIA a oferecê-la.
 6. **Preço, teste e disponibilidade.** O conector pode ser usado sem custo
    por 7 dias a partir da primeira conexão. Depois, custa US$ 8 por mês
-   ou, para quem contrata no Brasil, R$ [V] por mês, cobrados
+   ou, para quem contrata no Brasil, R$ 49,00 por mês, cobrados
    antecipadamente no cartão informado por meio do nosso processador de
    pagamentos. Você cancela quando quiser nas configurações; o
    cancelamento vale ao fim do mês já pago, sem nova cobrança. Se você for
@@ -65,7 +65,7 @@ Versão 2026-11-21 · [English](TERMS.md) · Português · [Español](TERMS.es.m
    versão aceita por você fica registrada.
 10. **Lei e foro.** Lei brasileira; foro de São Paulo/SP, ressalvado o
     foro do seu domicílio se você for consumidor. Contato:
-    privacidade@riasistemas.com.br (dados pessoais) e o [repositório do
+    suporte@riasistemas.com.br (dados pessoais) e o [repositório do
     plugin no
     GitHub](https://github.com/riasistemas/claude-channel-instagram/issues)
     (suporte).

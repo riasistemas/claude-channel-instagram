@@ -195,7 +195,7 @@ fecha de arriba indica el más reciente.
 
 RIA SYSTEMS LTDA, CNPJ 50.936.395/0001-07, Rua Cardeal Arcoverde, 2365, Conj. 33, Parte, Pinheiros, São Paulo/SP, CEP 05407-003, Brasil.
 
-- Privacidad: privacidade@riasistemas.com.br. Esta dirección es nuestro
+- Privacidad: suporte@riasistemas.com.br. Esta dirección es nuestro
   canal para solicitudes de protección de datos (LGPD, art. 41, § 2º).
 - Issues en GitHub: https://github.com/riasistemas/claude-channel-instagram/issues
 

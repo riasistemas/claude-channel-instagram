@@ -33,7 +33,7 @@ Version 2026-11-21 · English · [Português](TERMS.pt.md) · [Español](TERMS.e
    subscribe to Lia or requires RIA to offer it.
 6. **Price, trial and availability.** You can use the connector free of
    charge for 7 days from the first connection. After that it costs US$ 8
-   per month or, if you contract in Brazil, R$ [V] per month, charged in
+   per month or, if you contract in Brazil, R$ 49.00 per month, charged in
    advance to the card you provide through our payment processor. You can
    cancel at any time in the settings; cancellation takes effect at the
    end of the month already paid, with no further charge. If you are a
@@ -63,7 +63,7 @@ Version 2026-11-21 · English · [Português](TERMS.pt.md) · [Español](TERMS.e
    version you accepted is recorded.
 10. **Law and venue.** Brazilian law; courts of São Paulo/SP, without
     prejudice to the courts of your domicile if you are a consumer.
-    Contact: privacidade@riasistemas.com.br (personal data) and the
+    Contact: suporte@riasistemas.com.br (personal data) and the
     plugin's [GitHub
     repository](https://github.com/riasistemas/claude-channel-instagram/issues)
     (support).
