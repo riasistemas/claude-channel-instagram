@@ -32,7 +32,10 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   approve. Pasting a conversation or screenshot still works without it.
 - `/instagram:configure` checks the connection and explains how to connect
   and disconnect, in place of the waitlist.
-- README and PRIVACY.md describe what the connector stores, reads and sends.
+- README and PRIVACY.md describe what the connector stores, reads and sends,
+  the roles under the LGPD, retention and how to have data deleted.
+- TERMS.md: the connector's terms (EN/PT/ES), accepted on the connection
+  screen.
 
 ## [0.4.0] — 2026-10-24
 

@@ -1,6 +1,6 @@
 # Privacy Policy
 
-Last updated: 2026-11-16
+Last updated: 2026-11-21
 
 This policy describes how the **`instagram` plugin** (the "plugin") and the
 Instagram connector it uses (the "connector") handle data. It applies to
@@ -21,8 +21,10 @@ and the connector are maintained by RIA SYSTEMS LTDA ("RIA Systems").
 - If you connect Instagram, RIA Systems keeps your account ID, username,
   granted permissions and an encrypted Instagram access token, plus the
   direct messages of the connected accounts, which you agree to on the
-  connection screen. Comments are read from Meta only when a tool runs and
-  aren't stored.
+  connection screen. For those conversations RIA Systems acts as a
+  processor on your behalf and uses them only to show history to Claude
+  and, if you subscribe to it, for Lia's replies. Comments are read from
+  Meta only when a tool runs and aren't stored.
 
 ## Without the connector
 
@@ -33,7 +35,18 @@ else, doesn't log in to Instagram and doesn't call Meta's APIs.
 ## With the connector
 
 You connect by signing in with Instagram from Claude, through RIA Systems'
-Meta app "RIA Social". You choose which permissions to grant.
+Meta app "RIA Social". You choose which permissions to grant. Using the connector means accepting
+the [Connector Terms](TERMS.md), of which this policy is part.
+
+**Roles**
+
+For the conversations and the data of the people who write to a connected
+account, you are the controller and RIA Systems is the processor: we act
+only on your instructions, for the purposes stated here. For your own
+account data (IDs, username, token, consent records, action log) RIA
+Systems is the controller, and processes it to provide the connector and
+to keep records of what was authorized. Brazilian law (LGPD, Law
+13.709/2018) applies.
 
 **What the connector stores**
 
@@ -62,17 +75,25 @@ Systems, which stores it in your RIA Systems account. It's used to show the
 history to Claude and, only if you later turn on Lia's automatic replies
 (a separate paid service), so that Lia can answer. Turning that on doesn't
 ask you to accept again; the replies themselves only start when you
-contract the service. Media files aren't downloaded: only the type of an
-attachment is kept.
+contract the service. If you subscribe to Lia, Lia's Terms, Privacy Policy
+and DPA ([lia.im/termos](https://lia.im/termos),
+[lia.im/privacidade](https://lia.im/privacidade),
+[lia.im/dpa](https://lia.im/dpa)) govern the automatic replies; the role
+of RIA Systems stays the same: processor on your behalf. Media files
+aren't downloaded: only the type of an attachment is kept.
 
 Comments, post captions and the names of the people who wrote them are
 fetched from Meta when a tool runs, passed to your Claude conversation and
 not stored. No message or comment content is written to logs.
 
-Conversations are kept while the account stays connected. [PENDING LEGAL
-REVIEW: retention period after an account is removed or disconnected.]
-You can ask for them to be deleted at any time at the privacy address
-below.
+Conversations are kept while the account stays connected and in use. When
+you remove the account, or remove "RIA Social" in Instagram, the access
+token is deleted immediately and the conversations within 30 days; if no
+Claude app is authorized and Lia isn't subscribed for 30 days, we stop
+receiving messages and delete the ones kept. Consent records and the
+action log (which hold no message text) are kept for 5 years for legal
+purposes. You can ask for conversations to be deleted at any time (see
+"Disconnecting and deletion").
 
 **What it sends**
 
@@ -85,16 +106,24 @@ hours after the customer's last message, up to 1000 bytes, text only.
 - Meta, which runs Instagram and its API, under Meta's own terms.
 - Anthropic, which runs Claude: tool results become part of your Claude
   conversation under the terms and privacy policy of your Claude account.
+- Our hosting providers, which store the data on our behalf: Google Cloud,
+  in the United States (us-central1), with backups at Google Cloud and
+  Amazon Web Services. This international transfer relies on the
+  providers' standard contractual clauses (LGPD art. 33).
 
-RIA Systems doesn't sell this data or use it for advertising.
+RIA Systems doesn't sell this data, doesn't use it for advertising or
+prospecting, and doesn't use it to train AI models.
 
 **Disconnecting and deletion**
 
-Disconnecting the connector in Claude's connector or `/mcp` settings revokes
-Claude's access. Removing an account on the connection screen stops it
-from being used. Removing "RIA Social" under Instagram → Settings → Website
-permissions → Apps and websites also revokes Meta's access. To have the stored data
-deleted, including kept conversations, write to the privacy address below.
+Removing an account on the connection screen, or removing "RIA Social"
+under Instagram → Settings → Website permissions → Apps and websites,
+deletes the access token immediately and the kept conversations within 30
+days (see above). Disconnecting the connector in Claude's connector or
+`/mcp` settings only revokes that Claude app's access. You can also write
+to the privacy address below: we confirm within 2 business days and
+complete the deletion within 15 days. Meta's data-deletion requests are
+handled automatically with a confirmation code.
 
 ## Other people's data
 
@@ -102,7 +131,20 @@ Instagram conversations and comments hold other people's personal data.
 Only connect an account you manage, and only paste what you're allowed to
 share. For the conversations it keeps, RIA Systems processes your
 customers' data on your behalf; you remain responsible for having a legal
-basis to keep and answer them. The skills ask Claude not to repeat more of it than a reply needs.
+basis to keep and answer them. The skills ask Claude not to repeat more of
+it than a reply needs.
+
+If you wrote to a connected account and want your data deleted, contact
+that account's owner: we act on their instructions and will help them. We
+never contact a connected account's customers on our own.
+
+## Security and incidents
+
+The access token is encrypted at rest with a key used only by the
+connector; access to stored conversations is restricted to the connector
+and, if you subscribe to it, to Lia. If a security incident affects your
+data, we notify you and, when required, the Brazilian data protection
+authority (ANPD).
 
 ## What else RIA Systems can see
 
@@ -129,5 +171,8 @@ reflects the latest one.
 
 RIA SYSTEMS LTDA, CNPJ 50.936.395/0001-07, São Paulo, Brazil.
 
-- Privacy: privacidade@riasistemas.com.br
+- Privacy: privacidade@riasistemas.com.br. This address is our channel for
+  data-protection requests (LGPD art. 41, § 2º).
 - GitHub Issues: https://github.com/riasistemas/claude-channel-instagram/issues
+
+São Paulo courts, Brazilian law.

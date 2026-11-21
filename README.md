@@ -99,9 +99,9 @@ Its code and docs live on the [`local` branch](https://github.com/riasistemas/cl
 Credentials saved by earlier versions in `~/.claude/channels/instagram/.env`
 keep working there.
 
-## Privacy
+## Privacy and terms
 
-See [PRIVACY.md](./PRIVACY.md).
+See [PRIVACY.md](./PRIVACY.md) and the connector's [TERMS.md](./TERMS.md).
 
 ## License
 
