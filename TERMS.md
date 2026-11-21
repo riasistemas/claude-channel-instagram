@@ -1,8 +1,6 @@
 # Instagram Connector Terms — RIA Systems
 
-Version 2026-11-21 · [English](#english) · [Português](#português) · [Español](#español)
-
-## English
+Version 2026-11-21 · English · [Português](TERMS.pt.md) · [Español](TERMS.es.md)
 
 1. **What it is.** The `mcp.lia.im/instagram` connector links your
    Instagram professional account to Claude (claude.ai, the desktop and
@@ -32,11 +30,22 @@ Version 2026-11-21 · [English](#english) · [Português](#português) · [Espa�
    [lia.im/privacidade](https://lia.im/privacidade),
    [lia.im/dpa](https://lia.im/dpa)). Nothing here requires you to
    subscribe to Lia or requires RIA to offer it.
-6. **Free of charge and availability.** The connector is offered free of
-   charge, "as is", with no guarantee of continuous availability; it
-   depends on Meta and Anthropic, which RIA doesn't control. RIA may change,
-   limit or discontinue the connector, with 30 days' notice when the change
-   affects your use, unless Meta, Anthropic or the law requires otherwise.
+6. **Price, trial and availability.** You can use the connector free of
+   charge for 7 days from the first connection. After that it costs US$
+   8 per month, charged in advance to the card you provide through our
+   payment processor; if you contract in Brazil, the charge is made in
+   Brazilian reais at the exchange rate of the charge date. You can
+   cancel at any time in the settings; cancellation takes effect at the
+   end of the month already paid, with no further charge. If you are a
+   consumer, you may withdraw within 7 days of the first charge for a
+   full refund. RIA may change the price with 30 days' notice, effective
+   from the following month. The connector is offered "as is", with no
+   guarantee of continuous availability; it depends on Meta and
+   Anthropic, which RIA doesn't control. RIA may change, limit or
+   discontinue the connector, with 30 days' notice when the change
+   affects your use, unless Meta, Anthropic or the law requires
+   otherwise; if it discontinues the connector, it refunds the unused
+   part of the month.
 7. **Liability.** RIA is liable for damage it causes through intent or
    fault in operating the connector, within the limits of the law. It isn't
    liable for acts of Meta or Anthropic, for content you approve sending,
@@ -59,121 +68,3 @@ Version 2026-11-21 · [English](#english) · [Português](#português) · [Espa�
     (support).
 11. **Languages.** These Terms are published in Portuguese, English and
     Spanish; if the versions differ, the Portuguese version prevails.
-
-## Português
-
-1. **O que é.** O conector `mcp.lia.im/instagram` liga a sua conta
-   profissional do Instagram ao Claude (claude.ai, apps de desktop e
-   celular, Cowork e Claude Code), por meio do app "RIA Social" da RIA
-   SYSTEMS LTDA, CNPJ 50.936.395/0001-07 ("RIA"). Com ele, o Claude lê
-   mensagens diretas e comentários e envia apenas as respostas e ações que
-   você aprovar.
-2. **Quem pode usar.** Pessoa maior de 18 anos, em nome próprio ou de um
-   negócio, que administre a conta conectada e tenha autoridade para
-   conectá-la. Conta pessoal (não profissional) não é aceita pela Meta.
-3. **O que a RIA faz com os dados.** Está na
-   [Política de Privacidade](PRIVACY.md), que faz parte destes Termos. Em
-   resumo: a RIA guarda, em seu nome e só para o fim declarado na tela de
-   conexão, as mensagens diretas das contas conectadas; para esses dados
-   você é a controladora e a RIA, operadora. Comentários e arquivos de
-   mídia não são guardados.
-4. **Suas responsabilidades.** Ter base legal para tratar os dados dos seus
-   clientes e informá-los conforme a lei; cumprir os Termos da Plataforma e
-   as Políticas de Mensagens da Meta (janela de 24 horas, sem spam, sem
-   conteúdo proibido); revisar antes de aprovar cada envio; não usar o
-   conector para assédio, publicidade não solicitada ou qualquer finalidade
-   ilícita; manter a segurança do seu login no Claude e no Instagram.
-5. **O que não está incluído.** O conector não responde sozinho. O
-   atendimento automático é feito pela Lia da RIA, serviço contratado à
-   parte, regido pelos Termos de Uso, Política de Privacidade e DPA da Lia
-   ([lia.im/termos](https://lia.im/termos),
-   [lia.im/privacidade](https://lia.im/privacidade),
-   [lia.im/dpa](https://lia.im/dpa)). Nada aqui obriga você a contratar a
-   Lia nem obriga a RIA a oferecê-la.
-6. **Gratuidade e disponibilidade.** O conector é oferecido sem custo, "no
-   estado em que se encontra", sem garantia de disponibilidade contínua;
-   depende da Meta e da Anthropic, que a RIA não controla. A RIA pode
-   alterar, limitar ou descontinuar o conector, avisando com 30 dias quando
-   a mudança afetar o uso, salvo exigência da Meta, da Anthropic ou da lei.
-7. **Responsabilidade.** A RIA responde pelos danos que causar por dolo ou
-   culpa na operação do conector, nos limites da lei. Não responde por atos
-   da Meta ou da Anthropic, por conteúdo que você aprovar enviar, por
-   decisões tomadas com base no que o Claude escrever, nem por
-   indisponibilidade das plataformas de terceiros. Na relação com negócios,
-   a responsabilidade da RIA fica limitada a danos diretos.
-8. **Suspensão e encerramento.** A RIA pode suspender ou encerrar o acesso
-   em caso de violação destes Termos, das políticas da Meta ou de uso
-   abusivo, avisando quando possível. Você pode encerrar quando quiser
-   removendo a conta na tela de conexão ou o app "RIA Social" no Instagram;
-   a eliminação dos dados segue a Política de Privacidade.
-9. **Alterações.** Mudanças nestes Termos ou na Política são publicadas com
-   nova data; mudanças relevantes são avisadas na tela de conexão ou por
-   e-mail, e o uso continuado após o aviso vale como concordância. A versão
-   aceita por você fica registrada.
-10. **Lei e foro.** Lei brasileira; foro de São Paulo/SP, ressalvado o foro
-    do seu domicílio se você for consumidor. Contato:
-    privacidade@riasistemas.com.br (dados pessoais) e o
-    [repositório do plugin no GitHub](https://github.com/riasistemas/claude-channel-instagram/issues)
-    (suporte).
-11. **Idiomas.** Estes Termos são publicados em português, inglês e
-    espanhol; em caso de divergência, prevalece a versão em português.
-
-## Español
-
-1. **Qué es.** El conector `mcp.lia.im/instagram` vincula tu cuenta
-   profesional de Instagram con Claude (claude.ai, las apps de escritorio y
-   móvil, Cowork y Claude Code), mediante la app "RIA Social" de RIA
-   SYSTEMS LTDA, CNPJ 50.936.395/0001-07 ("RIA"). Con él, Claude lee
-   mensajes directos y comentarios y envía solo las respuestas y acciones
-   que tú apruebes.
-2. **Quién puede usarlo.** Una persona mayor de 18 años, en nombre propio o
-   de un negocio, que administre la cuenta conectada y tenga autoridad para
-   conectarla. Meta no acepta cuentas personales (no profesionales).
-3. **Qué hace RIA con los datos.** Está en la
-   [Política de Privacidad](PRIVACY.md), que forma parte de estos Términos.
-   En resumen: RIA guarda, en tu nombre y solo para el fin indicado en la
-   pantalla de conexión, los mensajes directos de las cuentas conectadas;
-   para esos datos tú eres el responsable del tratamiento y RIA, el
-   encargado. Los comentarios y los archivos multimedia no se guardan.
-4. **Tus responsabilidades.** Tener una base legal para tratar los datos de
-   tus clientes e informarles según la ley; cumplir las Condiciones de la
-   Plataforma y las Políticas de Mensajería de Meta (ventana de 24 horas,
-   sin spam, sin contenido prohibido); revisar cada envío antes de
-   aprobarlo; no usar el conector para acoso, publicidad no solicitada ni
-   ningún fin ilícito; mantener seguro tu acceso a Claude y a Instagram.
-5. **Qué no está incluido.** El conector no responde solo. La atención
-   automática la presta Lia de RIA, un servicio contratado aparte, regido
-   por los Términos de Uso, la Política de Privacidad y el DPA de Lia
-   ([lia.im/termos](https://lia.im/termos),
-   [lia.im/privacidade](https://lia.im/privacidade),
-   [lia.im/dpa](https://lia.im/dpa)). Nada aquí te obliga a contratar Lia
-   ni obliga a RIA a ofrecerla.
-6. **Gratuidad y disponibilidad.** El conector se ofrece sin costo, "tal
-   cual", sin garantía de disponibilidad continua; depende de Meta y de
-   Anthropic, que RIA no controla. RIA puede modificar, limitar o
-   discontinuar el conector, avisando con 30 días cuando el cambio afecte
-   el uso, salvo que Meta, Anthropic o la ley exijan otra cosa.
-7. **Responsabilidad.** RIA responde por los daños que cause con dolo o
-   culpa en la operación del conector, dentro de los límites de la ley. No
-   responde por actos de Meta o de Anthropic, por contenido cuyo envío tú
-   apruebes, por decisiones tomadas con base en lo que Claude escriba, ni
-   por la falta de disponibilidad de plataformas de terceros. En la
-   relación con negocios, la responsabilidad de RIA se limita a los daños
-   directos.
-8. **Suspensión y terminación.** RIA puede suspender o terminar el acceso
-   en caso de incumplimiento de estos Términos, de las políticas de Meta o
-   de uso abusivo, avisando cuando sea posible. Puedes terminar cuando
-   quieras eliminando la cuenta en la pantalla de conexión o la app "RIA
-   Social" en Instagram; la eliminación de los datos sigue la Política de
-   Privacidad.
-9. **Cambios.** Los cambios en estos Términos o en la Política se publican
-   con nueva fecha; los cambios relevantes se avisan en la pantalla de
-   conexión o por correo electrónico, y el uso continuado después del aviso
-   cuenta como aceptación. La versión que aceptaste queda registrada.
-10. **Ley y jurisdicción.** Ley brasileña; tribunales de São Paulo/SP, sin
-    perjuicio de los tribunales de tu domicilio si eres consumidor.
-    Contacto: privacidade@riasistemas.com.br (datos personales) y el
-    [repositorio del plugin en GitHub](https://github.com/riasistemas/claude-channel-instagram/issues)
-    (soporte).
-11. **Idiomas.** Estos Términos se publican en portugués, inglés y
-    español; en caso de divergencia, prevalece la versión en portugués.

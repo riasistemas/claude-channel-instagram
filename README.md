@@ -10,6 +10,14 @@ Works on claude.ai, the Claude desktop and mobile apps, Cowork and Claude
 Code. You need an Instagram professional account (Business or Creator) to
 connect; no Meta app, token or tunnel.
 
+## Ways to use it
+
+| | Where | Price |
+| --- | --- | --- |
+| **Paste a conversation** | Everywhere, no sign-in | Free |
+| **Instagram connector** (`mcp.lia.im/instagram`) | claude.ai, desktop, mobile, Cowork and Claude Code | 7 days free, then US$ 8/month ([terms](TERMS.md)) |
+| **Your own Meta app** ([`instagram-local`](#local-channel-for-developers)) | Claude Code and Cowork | Free; you create the Meta app and tokens |
+
 ## Skills
 
 | Skill | What it does |
@@ -88,7 +96,8 @@ links. The skills ask for your approval of the exact text before each send.
 
 Up to v0.3.5 this plugin also ran a local MCP server that received Meta's
 webhooks with your own Meta app. That channel is now a separate plugin,
-`instagram-local`, for Claude Code:
+`instagram-local`, for Claude Code and Cowork. You create your own Meta app
+and tokens:
 
 ```
 /plugin marketplace add riasistemas/claude-plugins
@@ -101,7 +110,8 @@ keep working there.
 
 ## Privacy and terms
 
-See [PRIVACY.md](./PRIVACY.md) and the connector's [TERMS.md](./TERMS.md).
+- Privacy policy: [English](./PRIVACY.md) · [Português](./PRIVACY.pt.md) · [Español](./PRIVACY.es.md)
+- Connector terms: [English](./TERMS.md) · [Português](./TERMS.pt.md) · [Español](./TERMS.es.md)
 
 ## License
 

@@ -34,8 +34,11 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   and disconnect, in place of the waitlist.
 - README and PRIVACY.md describe what the connector stores, reads and sends,
   the roles under the LGPD, retention and how to have data deleted.
-- TERMS.md: the connector's terms (EN/PT/ES), accepted on the connection
-  screen.
+- Connector terms and privacy policy in English, Portuguese and Spanish
+  (`TERMS*.md`, `PRIVACY*.md`); the connection screen links the visitor's
+  language and records the accepted version.
+- The connector is free for 7 days, then US$ 8 per month. Pasting a
+  conversation and the `instagram-local` plugin stay free.
 
 ## [0.4.0] — 2026-10-24
 

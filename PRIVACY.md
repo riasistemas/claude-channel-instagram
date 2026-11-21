@@ -1,5 +1,7 @@
 # Privacy Policy
 
+English · [Português](PRIVACY.pt.md) · [Español](PRIVACY.es.md)
+
 Last updated: 2026-11-21
 
 This policy describes how the **`instagram` plugin** (the "plugin") and the
@@ -35,8 +37,9 @@ else, doesn't log in to Instagram and doesn't call Meta's APIs.
 ## With the connector
 
 You connect by signing in with Instagram from Claude, through RIA Systems'
-Meta app "RIA Social". You choose which permissions to grant. Using the connector means accepting
-the [Connector Terms](TERMS.md), of which this policy is part.
+Meta app "RIA Social". You choose which permissions to grant. Using the
+connector means accepting the [Connector Terms](TERMS.md), of which this
+policy is part.
 
 **Roles**
 
@@ -46,7 +49,8 @@ only on your instructions, for the purposes stated here. For your own
 account data (IDs, username, token, consent records, action log) RIA
 Systems is the controller, and processes it to provide the connector and
 to keep records of what was authorized. Brazilian law (LGPD, Law
-13.709/2018) applies.
+13.709/2018) applies. If you are in the European Union or the United
+Kingdom, the GDPR also applies; the same rights and contact apply.
 
 **What the connector stores**
 
@@ -110,6 +114,8 @@ hours after the customer's last message, up to 1000 bytes, text only.
   in the United States (us-central1), with backups at Google Cloud and
   Amazon Web Services. This international transfer relies on the
   providers' standard contractual clauses (LGPD art. 33).
+- Our payment processor (Stripe), which receives your card and billing
+  details to charge the subscription; we don't store card numbers.
 
 RIA Systems doesn't sell this data, doesn't use it for advertising or
 prospecting, and doesn't use it to train AI models.
