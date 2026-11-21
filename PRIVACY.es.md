@@ -126,7 +126,12 @@ mensaje del cliente, hasta 1000 bytes, solo texto.
   nombre: Google Cloud, en Estados Unidos (us-central1), con copias de
   seguridad en Google Cloud y Amazon Web Services. Esta transferencia
   internacional se apoya en las cláusulas contractuales tipo de los
-  proveedores (LGPD, art. 33).
+  proveedores (LGPD, art. 33). Google Cloud (Google LLC) y Amazon Web
+  Services, Inc. participan en el Marco de Privacidad de Datos UE-EE. UU.
+  y su extensión para el Reino Unido, o proporcionan las cláusulas
+  contractuales tipo de la UE; las transferencias desde la UE/EEE a RIA en
+  Brasil se apoyan en la decisión de adecuación de la Comisión Europea
+  para Brasil (Decisión de Ejecución (UE) 2026/179).
 - Nuestro procesador de pagos (Stripe), que recibe los datos de tu tarjeta
   y de facturación para cobrar la suscripción; no guardamos números de
   tarjeta.

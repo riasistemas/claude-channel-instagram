@@ -120,7 +120,12 @@ cliente, até 1000 bytes, só texto.
 - Nossos provedores de hospedagem, que guardam os dados em nosso nome:
   Google Cloud, nos Estados Unidos (us-central1), com backups no Google
   Cloud e na Amazon Web Services. Essa transferência internacional se
-  apoia nas cláusulas contratuais padrão dos provedores (LGPD, art. 33).
+  apoia nas cláusulas contratuais padrão dos provedores (LGPD, art. 33). O
+  Google Cloud (Google LLC) e a Amazon Web Services, Inc. participam do
+  EU-U.S. Data Privacy Framework e da sua extensão para o Reino Unido, ou
+  oferecem as cláusulas contratuais padrão da UE; as transferências da
+  UE/EEE para a RIA no Brasil se apoiam na decisão de adequação da
+  Comissão Europeia para o Brasil (Decisão de Execução (UE) 2026/179).
 - Nosso processador de pagamentos (Stripe), que recebe os dados do seu
   cartão e de cobrança para cobrar a assinatura; não guardamos números de
   cartão.

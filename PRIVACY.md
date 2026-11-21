@@ -113,7 +113,12 @@ hours after the customer's last message, up to 1000 bytes, text only.
 - Our hosting providers, which store the data on our behalf: Google Cloud,
   in the United States (us-central1), with backups at Google Cloud and
   Amazon Web Services. This international transfer relies on the
-  providers' standard contractual clauses (LGPD art. 33).
+  providers' standard contractual clauses (LGPD art. 33). Google Cloud
+  (Google LLC) and Amazon Web Services, Inc. participate in the EU-U.S.
+  Data Privacy Framework and its UK Extension, or provide the EU standard
+  contractual clauses; transfers to RIA in Brazil from the EU/EEA rely on
+  the European Commission's adequacy decision for Brazil (Implementing
+  Decision (EU) 2026/179).
 - Our payment processor (Stripe), which receives your card and billing
   details to charge the subscription; we don't store card numbers.
 
