@@ -39,8 +39,9 @@ five to eight lines:
    switch for free in the Instagram app under Settings → Account type and
    tools.
 2. **claude.ai, the desktop and mobile apps and Cowork:** open this plugin
-   in Claude's plugin settings, go to its **Connectors** tab and select
-   **Connect** next to Instagram. On Team and Enterprise plans an Owner adds
+   in Claude's plugin settings, go to its **Connectors** tab, add
+   **Instagram** if it shows as not added, and select **Connect**. Adding
+   the plugin doesn't connect anything by itself. On Team and Enterprise plans an Owner adds
    the connector for the organization first; each member then connects
    their own account.
 3. **Claude Code:** run `/mcp`, pick `plugin:instagram:instagram` and choose
@@ -58,8 +59,15 @@ five to eight lines:
    drafts replies and sends only what the user approves.
 
 Don't promise dates, prices or features beyond this. If sign-in fails, ask
-what the screen said; an account already connected to a RIA Systems office
-panel can't be connected here too.
+what the screen said. The usual causes:
+
+- A personal account: Instagram offers to switch it to a professional one
+  during sign-in; the user can accept there or switch first in the app.
+- The sign-in tab was closed or timed out: start again from **Connect**.
+- An account already connected to a RIA Systems office panel can't be
+  connected here too.
+- Posts and captions can be read but not edited: Instagram's API doesn't
+  allow editing a published post.
 
 ## Disconnect
 

@@ -4,7 +4,7 @@ All notable changes to this plugin are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.5.0] — Unreleased
+## [0.5.0] — 2026-11-22
 
 ### Added
 
@@ -32,6 +32,12 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   approve. Pasting a conversation or screenshot still works without it.
 - `/instagram:configure` checks the connection and explains how to connect
   and disconnect, in place of the waitlist.
+- When the connector isn't connected yet, `/instagram:inbox` says where to
+  add it and sign in (the plugin's Connectors tab, or `/mcp` in Claude
+  Code) and still offers to draft from a pasted conversation.
+- Captions can be reviewed from `/instagram:inbox`. Instagram's API doesn't
+  edit published posts, so Claude gives the corrected text to paste in the
+  app.
 - README and PRIVACY.md describe what the connector stores, reads and sends,
   the roles under the LGPD, retention and how to have data deleted.
 - Connector terms and privacy policy in English, Portuguese and Spanish
