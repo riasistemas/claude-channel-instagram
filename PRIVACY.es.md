@@ -99,12 +99,10 @@ los escribieron se obtienen de Meta cuando se ejecuta una herramienta, se
 pasan a tu conversación con Claude y no se guardan. Ningún contenido de
 mensajes o comentarios se escribe en los registros técnicos.
 
-Las conversaciones se guardan mientras la cuenta siga conectada y en uso.
-Cuando eliminas la cuenta, o eliminas "RIA Social" en Instagram, el token
-de acceso se borra de inmediato y las conversaciones en un plazo de 30
-días; si durante 30 días no hay ninguna app de Claude autorizada ni Lia
-contratada, dejamos de recibir mensajes y borramos los guardados. Los
-registros de aceptación y el registro de acciones (que no contienen texto
+Las conversaciones se guardan mientras la cuenta siga conectada, aunque
+no se use. Cuando eliminas la cuenta, o eliminas "RIA Social" en
+Instagram, el token de acceso se borra de inmediato y las conversaciones
+en un plazo de 30 días. Los registros de aceptación y el registro de acciones (que no contienen texto
 de mensajes) se conservan 5 años con fines legales. Puedes pedir que se
 borren las conversaciones en cualquier momento (consulta "Desconexión y
 eliminación").

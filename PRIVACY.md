@@ -90,11 +90,10 @@ Comments, post captions and the names of the people who wrote them are
 fetched from Meta when a tool runs, passed to your Claude conversation and
 not stored. No message or comment content is written to logs.
 
-Conversations are kept while the account stays connected and in use. When
-you remove the account, or remove "RIA Social" in Instagram, the access
-token is deleted immediately and the conversations within 30 days; if no
-Claude app is authorized and Lia isn't subscribed for 30 days, we stop
-receiving messages and delete the ones kept. Consent records and the
+Conversations are kept while the account stays connected, even if it
+isn't being used. When you remove the account, or remove "RIA Social" in
+Instagram, the access token is deleted immediately and the conversations
+within 30 days. Consent records and the
 action log (which hold no message text) are kept for 5 years for legal
 purposes. You can ask for conversations to be deleted at any time (see
 "Disconnecting and deletion").

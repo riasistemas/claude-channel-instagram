@@ -95,11 +95,10 @@ na Meta quando uma ferramenta roda, passados à sua conversa com o Claude e
 não são guardados. Nenhum conteúdo de mensagem ou comentário é gravado em
 logs.
 
-As conversas ficam guardadas enquanto a conta estiver conectada e em uso.
-Quando você remove a conta, ou remove o "RIA Social" no Instagram, o token
-de acesso é apagado na hora e as conversas em até 30 dias; se por 30 dias
-não houver nenhum app do Claude autorizado nem a Lia contratada, paramos
-de receber mensagens e apagamos as guardadas. Os registros de aceite e a
+As conversas ficam guardadas enquanto a conta estiver conectada, mesmo
+sem uso. Quando você remove a conta, ou remove o "RIA Social" no
+Instagram, o token de acesso é apagado na hora e as conversas em até 30
+dias. Os registros de aceite e a
 trilha de ações (que não têm texto de mensagem) ficam guardados por 5 anos
 para fins legais. Você pode pedir a exclusão das conversas a qualquer
 momento (veja "Desconexão e exclusão").
