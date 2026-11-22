@@ -4,6 +4,49 @@ All notable changes to this plugin are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.5.0] — 2026-11-22
+
+### Added
+
+- **Instagram connector.** The plugin declares RIA Systems' remote MCP
+  server, `https://mcp.lia.im/instagram`. Sign in with an Instagram
+  professional account from the plugin's Connectors tab (or `/mcp` in
+  Claude Code) to list, read and answer DMs and comments from Claude.
+- Nine connector tools: `get_account_status`, `list_dm_conversations`,
+  `read_dm_conversation`, `send_dm_reply`, `list_recent_posts`,
+  `list_post_comments`, `reply_to_comment`, `send_private_reply` and
+  `hide_comment`.
+- **Several Instagram accounts.** Connect more than one account from the
+  RIA Systems sign-in page (Add another Instagram account); every tool
+  takes an `account` parameter, and `/instagram:inbox` asks which account
+  to use and says which @ each reply goes out from.
+- **Kept conversations.** The sign-in page asks you to agree that RIA
+  Systems keeps the direct messages of the connected accounts (versioned
+  acceptance per account), so Lia's automatic replies can be turned on later
+  without asking again. Each action Claude takes is logged without its text.
+
+### Changed
+
+- `/instagram:inbox` uses the connector when it's signed in: it lists who
+  is waiting for an answer, drafts replies and sends only the ones you
+  approve. Pasting a conversation or screenshot still works without it.
+- `/instagram:configure` checks the connection and explains how to connect
+  and disconnect, in place of the waitlist.
+- When the connector isn't connected yet, `/instagram:inbox` says where to
+  add it and sign in (the plugin's Connectors tab, or `/mcp` in Claude
+  Code) and still offers to draft from a pasted conversation.
+- Captions can be reviewed from `/instagram:inbox`. Instagram's API doesn't
+  edit published posts, so Claude gives the corrected text to paste in the
+  app.
+- README and PRIVACY.md describe what the connector stores, reads and sends,
+  the roles under the LGPD, retention and how to have data deleted.
+- Connector terms and privacy policy in English, Portuguese and Spanish
+  (`TERMS*.md`, `PRIVACY*.md`); the connection screen links the visitor's
+  language and records the accepted version.
+- The connector is free during the beta; any future price comes with 30 days'
+  notice and only applies to those who accept it. Pasting a
+  conversation and the `instagram-local` plugin stay free.
+
 ## [0.4.0] — 2026-10-24
 
 ### Changed
